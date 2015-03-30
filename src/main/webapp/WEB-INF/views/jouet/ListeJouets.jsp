@@ -1,4 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
 <%@ page session="false" %>
 <html>
 <head>
@@ -6,7 +8,7 @@
 </head>
 <body>
 <h1>
-	Liste des jouets : 
+	Liste des jouets : (${fn:length(mesJouets)})
 </h1>
 
 <!-- //Afficher le tableau que si la liste contient des éléments -->

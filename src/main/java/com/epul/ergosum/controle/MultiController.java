@@ -73,10 +73,7 @@ public class MultiController extends MultiActionController {
 					categorieCode = Integer.parseInt(categorie);
 					trancheCode = Integer.parseInt(tranche);
 				}
-				
-				List<Jouet> l = unService
-						.listerTousLesJouets(categorieCode, trancheCode);
-				System.out.println("taille Liste jouets = "+l.size());
+	
 				request.setAttribute("mesJouets", unService
 						.listerTousLesJouets(categorieCode, trancheCode));
 				

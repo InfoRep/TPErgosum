@@ -42,12 +42,11 @@ public class GestionErgosum {
 		
 		sql += "ORDER BY numero asc";
 		
-		System.out.println(sql);
+		System.out.println(sql); //TODO
 
 		rs = DialogueBd.lecture(sql);
-		
 		int index = 0;
-		/*while(index < rs.size())
+		while(index < rs.size())
 		{
 			Jouet j = new Jouet();
 	
@@ -57,15 +56,21 @@ public class GestionErgosum {
 			if (categorieCode > 0)
 				j.setCategorie(cat);
 			else {
-				j.setCategorie(new Categorie(rs.get(index+1).toString()));
+				//TODO Chaque jouet a une cat différente, rechercher la cat associer au jouet 
+				j.setCategorie(new Categorie(rs.get(index+1).toString())); //A modif
 			}
 			
 			if (trancheCode > 0)
 				j.setTrancheage(trancheage);
 			else {
-				j.setTrancheage(new Trancheage(rs.get(index+2).toString()));
+				//TODO Chaque jouet a une tranche age différente, rechercher la tranche age associer au jouet 
+				j.setTrancheage(new Trancheage(rs.get(index+2).toString())); //A modif
 			}
-		}*/
+			
+			mesJouets.add(j);
+			
+			index = index + 4; //4 champs
+		}
 		
 		return mesJouets;
 	}
@@ -116,12 +121,11 @@ public class GestionErgosum {
 		
 		Categorie c = null;
 		
-		int index = 0;
-		while(index < rs.size())
+		if (rs.size() > 0)
 		{
 			c = new Categorie();
-			c.setCodecateg(rs.get(index+0).toString());
-			c.setLibcateg(rs.get(index+1).toString());
+			c.setCodecateg(rs.get(0).toString());
+			c.setLibcateg(rs.get(1).toString());
 		}
 		
 		return c;
@@ -140,13 +144,12 @@ public class GestionErgosum {
 		
 		Trancheage t = null;
 		
-		int index = 0;
-		while(index < rs.size())
+		if (rs.size() > 0)
 		{
 			t = new Trancheage();
-			t.setCodetranche(rs.get(index+0).toString());
-			t.setAgemin(Integer.valueOf(rs.get(index+1).toString()));
-			t.setAgemax(Integer.valueOf(rs.get(index+1).toString()));
+			t.setCodetranche(rs.get(0).toString());
+			t.setAgemin(Integer.valueOf(rs.get(1).toString()));
+			t.setAgemax(Integer.valueOf(rs.get(2).toString()));
 		}
 		
 		return t;
