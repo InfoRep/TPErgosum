@@ -2,18 +2,16 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
 <%@ page session="false" %>
-<html>
-<head>
-	<title>Home</title>
-</head>
-<body>
-<h1>
-	Liste des jouets : (${fn:length(mesJouets)})
-</h1>
 
-<!-- //Afficher le tableau que si la liste contient des éléments -->
-      
-        <div class="row">
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
+
+<t:layout>
+	<jsp:attribute name="pageTitle">Liste jouets</jsp:attribute>
+
+    <jsp:attribute name="title">Liste des jouets : (${fn:length(mesJouets)})</jsp:attribute>
+    
+    <jsp:body>
+   		<div class="row">
         	<div class="col-md-12">
 		        <table class="table">
 			  		<tr>
@@ -35,6 +33,6 @@
 				</table>
 			</div>
 		</div>
+    </jsp:body>
+</t:layout>
 
-</body>
-</html>

@@ -54,7 +54,7 @@ public class MultiController extends MultiActionController {
 	/**
 	 * Affichage de tous les jouets
 	 */
-	@RequestMapping(value = "afficherJouets.htm")
+	@RequestMapping(value = "/jouet/afficherJouets.htm")
 	public ModelAndView afficherLesJouets(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 

@@ -16,12 +16,12 @@
 			<jsp:invoke fragment="pageTitle"/> ~ Ergosum<% //Titre de la page %>
 		</title>
 		
-		<link rel="icon" type="image/png" href="images/icone.png" />
+		<link rel="icon" type="image/png" href="${pageContext.request.contextPath}/resources/images/icone.png" />
 		
-		<link rel="stylesheet" type="text/css" href="lib/bootstrap/css/theme_noir.min.css">
-		<link rel="stylesheet" type="text/css" href="lib/bootstrapDialog/css/bootstrap-dialog.min.css">
-		<link rel="stylesheet" href="lib/zebra_Datepicker/css/noir.css" type="text/css" />
-		<link rel="stylesheet" type="text/css" href="css/layout_noir.css">
+		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/lib/bootstrap/css/theme_noir.min.css">
+		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/lib/bootstrapDialog/css/bootstrap-dialog.min.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/lib/zebra_Datepicker/css/noir.css" type="text/css" />
+		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/layout_noir.css">
 		
 		<style type="text/css">
 			.modal-backdrop {
@@ -31,10 +31,10 @@
 		
 		<jsp:invoke fragment="css"/> <% //Pour inclure des fichiers ou code css %>
 		
-		<script type="text/javascript" src="lib/jquery/jquery-1.11.2.min.js"></script>
-		<script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="lib/bootstrapDialog/js/bootstrap-dialog.min.js"></script>
-		<script type="text/javascript" src="lib/zebra_Datepicker/js/zebra_datepicker.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/lib/jquery/jquery-1.11.2.min.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/lib/bootstrap/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/lib/bootstrapDialog/js/bootstrap-dialog.min.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/lib/zebra_Datepicker/js/zebra_datepicker.js"></script>
 	</head>
   	<body>
   		<!--  MENU  -->
@@ -47,7 +47,7 @@
 				        <span class="icon-bar"></span>
 				        <span class="icon-bar"></span>
 			      	</button>
-			      <a class="navbar-brand" href="index.jsp">Ergosum</a>
+			      <a class="navbar-brand" href="${pageContext.request.contextPath}/">Ergosum</a>
 		    	</div>
 		
 			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -63,7 +63,7 @@
 				        </div>
 			     	</form>
 		     		<ul class="nav navbar-nav">
-				        <li><a href="afficherJouets.htm">Liste complète jouets</a></li>
+				        <li><a href="${pageContext.request.contextPath}/jouet/afficherJouets.htm">Liste complète jouets</a></li>
 			      	</ul>
 		  		</div><!-- /.navbar-collapse -->
 	  		</div><!-- /.container-fluid -->
