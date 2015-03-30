@@ -8,17 +8,20 @@
 <t:layout>
 	<jsp:attribute name="pageTitle">Accueil</jsp:attribute>
 
-    <jsp:attribute name="title">Accueil Ergosum</jsp:attribute>
+    <jsp:attribute name="title">Accueil</jsp:attribute>
     
     <jsp:body>
    		<h3 style="margin-top:0">Bienvenue !</h3>
    		<div class="row">
    			<div class="col-md-1"></div>
-   			<div class="col-md-11">
+   			<div class="col-md-7">
 	   			<h4>Nous sommes le ${serverTime}</h4>
    				<br/>
 		   		<p>Cette application vous permettra de modifier les jouets ainsi que leurs catalogues.</p>
 		   		<h5>En vous souhaitant une agréable visite !</h5>
+			</div>
+			<div class="col-md-4">
+	   			<img src="resources/images/polytech.png" width="200" alt="" />
 			</div>
    		</div>
     </jsp:body>
