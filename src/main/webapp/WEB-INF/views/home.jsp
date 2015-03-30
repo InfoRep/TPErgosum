@@ -11,22 +11,14 @@
     <jsp:attribute name="title">Accueil Ergosum</jsp:attribute>
     
     <jsp:body>
-   		<h4>Bonjour, nous sommes le ${serverTime}</h4>
-   		
+   		<h3 style="margin-top:0">Bienvenue !</h3>
    		<div class="row">
    			<div class="col-md-1"></div>
    			<div class="col-md-11">
-	   			<h5 style="">Que souhaitez vous faire ?</h5>
-		   		<br/>
-		        <div id="menu">
-				  	<ul class="list-group">
-				      	<li class="list-group-item">
-				      		<i class="glyphicon-envelope glyphicon glyphicon-pencil"></i>&nbsp;&nbsp;&nbsp;
-				      		<a href="" class="lienAccueil">d</a>
-				      		<span class="badge"><a href=""><i class="glyphicon-envelope glyphicon glyphicon-pencil"></i></a></span>
-				      	</li>
-				  	</ul>
-				</div>
+	   			<h4>Nous sommes le ${serverTime}</h4>
+   				<br/>
+		   		<p>Cette application vous permettra de modifier les jouets ainsi que leurs catalogues.</p>
+		   		<h5>En vous souhaitant une agréable visite !</h5>
 			</div>
    		</div>
     </jsp:body>
