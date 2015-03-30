@@ -18,14 +18,14 @@
 	href="${pageContext.request.contextPath}/resources/images/icone.png" />
 
 <link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/resources/lib/bootstrap/css/theme_noir.min.css">
+	href="${pageContext.request.contextPath}/resources/lib/bootstrap/css/theme_bleu.min.css">
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/resources/lib/bootstrapDialog/css/bootstrap-dialog.min.css">
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/lib/zebra_Datepicker/css/noir.css"
+	href="${pageContext.request.contextPath}/resources/lib/zebra_Datepicker/css/bleu.css"
 	type="text/css" />
 <link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/resources/css/layout_noir.css">
+	href="${pageContext.request.contextPath}/resources/css/layout_bleu.css">
 
 <style type="text/css">
 	.modal-backdrop {
