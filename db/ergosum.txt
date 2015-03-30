@@ -1,0 +1,222 @@
+-- phpMyAdmin SQL Dump
+-- version 3.5.2.2
+-- http://www.phpmyadmin.net
+--
+-- Client: 127.0.0.1
+-- Généré le: Lun 23 Mars 2015 à 08:15
+-- Version du serveur: 5.5.27
+-- Version de PHP: 5.4.7
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+--
+-- Base de données: `ergosum`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `catalogue`
+--
+
+CREATE TABLE IF NOT EXISTS `catalogue` (
+  `ANNEE` int(11) NOT NULL,
+  `quantiteDistribuee` int(11) NOT NULL,
+  PRIMARY KEY (`ANNEE`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Contenu de la table `catalogue`
+--
+
+INSERT INTO `catalogue` (`ANNEE`, `quantiteDistribuee`) VALUES
+(2000, 15),
+(2001, 219),
+(2002, 67),
+(2003, 95),
+(2004, 110),
+(2005, 40),
+(2006, 70);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `categorie`
+--
+
+CREATE TABLE IF NOT EXISTS `categorie` (
+  `CODECATEG` varchar(15) NOT NULL,
+  `LIBCATEG` varchar(25) DEFAULT NULL,
+  PRIMARY KEY (`CODECATEG`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Contenu de la table `categorie`
+--
+
+INSERT INTO `categorie` (`CODECATEG`, `LIBCATEG`) VALUES
+('1', 'Eveil'),
+('2', 'Musical'),
+('3', 'Educatif'),
+('4', 'Société'),
+('5', 'Réflexion');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `comporte`
+--
+
+CREATE TABLE IF NOT EXISTS `comporte` (
+  `ANNEE` int(11) NOT NULL,
+  `NUMERO` varchar(15) NOT NULL,
+  `QUANTITE` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ANNEE`,`NUMERO`),
+  KEY `FK_COMPORTE2` (`NUMERO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Contenu de la table `comporte`
+--
+
+INSERT INTO `comporte` (`ANNEE`, `NUMERO`, `QUANTITE`) VALUES
+(2000, '1', 10),
+(2000, '12', 15),
+(2000, '16', 13),
+(2000, '19', 2),
+(2000, '22', 2),
+(2000, '23', 5),
+(2001, '12', 22),
+(2001, '19', 23),
+(2001, '2', 20),
+(2001, '20', 24),
+(2001, '28', 18),
+(2002, '12', 12),
+(2002, '13', 35),
+(2002, '21', 21),
+(2002, '22', 22),
+(2002, '3', 30),
+(2003, '21', 33),
+(2003, '22', 34),
+(2003, '30', 31),
+(2003, '4', 40),
+(2003, '9', 19),
+(2004, '12', 12),
+(2004, '13', 54),
+(2004, '5', 50),
+(2005, '13', 92),
+(2005, '5', 6),
+(2005, '6', 60),
+(2006, '23', 8),
+(2006, '30', 2),
+(2006, '7', 70);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `jouet`
+--
+
+CREATE TABLE IF NOT EXISTS `jouet` (
+  `NUMERO` varchar(15) NOT NULL,
+  `CODECATEG` varchar(15) NOT NULL,
+  `CODETRANCHE` varchar(15) NOT NULL,
+  `LIBELLE` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`NUMERO`),
+  KEY `FK_APPARTIENT` (`CODECATEG`),
+  KEY `FK_EST_FAIT` (`CODETRANCHE`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Contenu de la table `jouet`
+--
+
+INSERT INTO `jouet` (`NUMERO`, `CODECATEG`, `CODETRANCHE`, `LIBELLE`) VALUES
+('1', '1', '2', 'Les drapeaux'),
+('10', '3', '3', 'Mes premiers accords'),
+('100', '1', '1', 'test1001'),
+('11', '2', '3', 'Karaoke'),
+('12', '3', '3', 'Anglais facile'),
+('13', '3', '3', 'Les nombres magiques'),
+('14', '3', '3', 'Les polyedres'),
+('15', '3', '4', 'Le monde en 3D'),
+('16', '3', '4', 'Espace virtuel'),
+('17', '4', '3', 'Chimie en folie'),
+('18', '3', '3', 'Le monde des parfums'),
+('19', '3', '3', 'Figures magiques'),
+('2', '1', '1', 'Memory'),
+('20', '4', '4', 'Monopoly'),
+('21', '4', '4', 'Tetrix'),
+('22', '4', '4', 'Pictionnary'),
+('23', '4', '4', 'Poker'),
+('24', '5', '3', 'Les intrus'),
+('25', '5', '3', 'Les cartes magiques'),
+('26', '5', '3', 'Un casse tête'),
+('27', '5', '4', 'La bonne paye'),
+('28', '5', '4', 'Gestion d''une ville'),
+('29', '5', '4', 'jeu de courses'),
+('3', '1', '1', 'Ma musique'),
+('30', '5', '4', 'La bourse'),
+('31', '5', '5', 'Mon entreprise'),
+('33', '5', '5', 'Geomètrie dans l''esp'),
+('34', '5', '5', 'les fractales'),
+('4', '1', '1', 'Les cubes'),
+('5', '2', '1', 'Clavier musical'),
+('6', '2', '1', 'Sons magiques'),
+('7', '2', '2', 'Piano fantastique'),
+('8', '2', '2', 'Memory musical'),
+('855', '2', '2', 'adrien'),
+('9', '2', '3', 'Solfège par le jeu');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `trancheage`
+--
+
+CREATE TABLE IF NOT EXISTS `trancheage` (
+  `CODETRANCHE` varchar(15) NOT NULL,
+  `AGEMIN` int(11) DEFAULT NULL,
+  `AGEMAX` int(11) DEFAULT NULL,
+  PRIMARY KEY (`CODETRANCHE`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Contenu de la table `trancheage`
+--
+
+INSERT INTO `trancheage` (`CODETRANCHE`, `AGEMIN`, `AGEMAX`) VALUES
+('1', 2, 4),
+('2', 4, 6),
+('3', 6, 10),
+('4', 10, 14),
+('5', 14, 16);
+
+--
+-- Contraintes pour les tables exportées
+--
+
+--
+-- Contraintes pour la table `comporte`
+--
+ALTER TABLE `comporte`
+  ADD CONSTRAINT `FK_COMPORTE` FOREIGN KEY (`ANNEE`) REFERENCES `catalogue` (`ANNEE`),
+  ADD CONSTRAINT `FK_COMPORTE2` FOREIGN KEY (`NUMERO`) REFERENCES `jouet` (`NUMERO`);
+
+--
+-- Contraintes pour la table `jouet`
+--
+ALTER TABLE `jouet`
+  ADD CONSTRAINT `FK_APPARTIENT` FOREIGN KEY (`CODECATEG`) REFERENCES `categorie` (`CODECATEG`),
+  ADD CONSTRAINT `FK_EST_FAIT` FOREIGN KEY (`CODETRANCHE`) REFERENCES `trancheage` (`CODETRANCHE`);
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
