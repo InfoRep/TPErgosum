@@ -297,7 +297,7 @@ public class MultiController extends MultiActionController {
 	/**
 	 * afficher le Dictionnaire
 	 */
-	@RequestMapping(value = "afficherDictionnaire.htm")
+	@RequestMapping(value = "dictionnaires.htm")
 	public ModelAndView afficherDictionnaire(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
@@ -305,10 +305,17 @@ public class MultiController extends MultiActionController {
 		try {
 			String annee = request.getParameter("annee"); //annee catalogue
 			
-			HashMap<Categorie, Integer> hashCatInt = GestionCatalogue.rechercherDictionnaire(request.getParameter("annee"));
-			request.setAttribute("dictionnaire", hashCatInt);
-			request.setAttribute("anneecatalogue", annee);
-			destinationPage = "/AfficherDictionnaire";
+			if (annee != null)
+			{ //Recherche du dictionnaire pour le catalogue choisi
+				HashMap<Categorie, Integer> hashCatInt = GestionCatalogue.rechercherDictionnaire(request.getParameter("annee"));
+				request.setAttribute("dictionnaire", hashCatInt);
+				request.setAttribute("annee", annee);	
+			} else {
+				//Vue de choix du catalogue
+				request.setAttribute("catalogues", GestionCatalogue.lister());
+			}
+			
+			destinationPage = "/Dictionnaires";
 		}
 		catch (MonException e) {
 			request.setAttribute("MesErreurs", e.getMessage());

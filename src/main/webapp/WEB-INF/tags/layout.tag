@@ -87,7 +87,7 @@
 					</ul>
 				</li>
 				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-				<li><a href="#">Dictionnaires</a></li>
+				<li><a href="${pageContext.request.contextPath}/dictionnaires.htm">Dictionnaires</a></li>
 			</ul>
 		</div>
 		<!-- /.navbar-collapse -->
