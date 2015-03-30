@@ -10,5 +10,11 @@
 </h1>
 
 <P>  The time on the server is ${serverTime}. </P>
+
+<ul>
+  <li> <a href="afficherJouets.htm">Afficher les jouets</a> </li>
+</ul>
+
+
 </body>
 </html>

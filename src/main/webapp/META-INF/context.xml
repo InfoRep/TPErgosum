@@ -1,15 +1,15 @@
-<datasources>
-    <local-tx-datasource>
-       <jndi-name>DSergosum</jndi-name>
-          <connection-url>jdbc:mysql://localhost:3306/ergosum</connection-url>
-          <driver-class>com.mysql.jdbc.Driver</driver-class>
-          <user-name>userepul</user-name>
-          <password>epul</password>
-          <exception-sorter-class-name>
-               org.jboss.resource.adapter.jdbc.vendor.MySQLExceptionSorter
-          </exception-sorter-class-name>
-       <metadata>
-          <type-mapping>mySQL</type-mapping>
-       </metadata>
-    </local-tx-datasource>
-</datasources>
+<?xml version="1.0" encoding="UTF-8"?> 
+
+<!-- <Context path="/ProgrammeDatasource" debug="1" 
+    reloadable="true"> -->
+<Context>
+        <Resource name="jdbc/DSergosum"
+            auth="Container"
+            type="javax.sql.DataSource"
+            username="userepul"
+            password="epul"
+            driverClassName="com.mysql.jdbc.Driver"
+            url="jdbc:mysql://localhost:3306/ergosum"
+            maxActive="8"
+            maxIdle="4"/>
+</Context>

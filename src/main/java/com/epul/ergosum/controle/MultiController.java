@@ -1,13 +1,10 @@
 package com.epul.ergosum.controle;
 
-import com.epul.ergosum.metier.*;
-
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
-
-import com.epul.ergosum.meserreurs.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
+
+import com.epul.ergosum.meserreurs.MonException;
+import com.epul.ergosum.metier.Catalogue;
+import com.epul.ergosum.metier.Categorie;
+import com.epul.ergosum.metier.GestionErgosum;
+import com.epul.ergosum.metier.Jouet;
+import com.epul.ergosum.metier.Trancheage;
 
 /**
  * Handles requests for the application home page.
@@ -35,7 +39,7 @@ public class MultiController extends MultiActionController {
 	 */
 	private Jouet unJouet;
 
-	@RequestMapping(value = "Accueil.htm", method = RequestMethod.GET)
+	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
 		logger.info("Welcome home! The client locale is {}.", locale);
 
@@ -44,7 +48,7 @@ public class MultiController extends MultiActionController {
 				DateFormat.LONG, locale);
 		String formattedDate = dateFormat.format(date);
 		model.addAttribute("serverTime", formattedDate);
-		return "/Accueil";
+		return "/home";
 	}
 
 	/**
@@ -69,9 +73,13 @@ public class MultiController extends MultiActionController {
 					categorieCode = Integer.parseInt(categorie);
 					trancheCode = Integer.parseInt(tranche);
 				}
+				
+				List<Jouet> l = unService
+						.listerTousLesJouets(categorieCode, trancheCode);
+				System.out.println("taille Liste jouets = "+l.size());
 				request.setAttribute("mesJouets", unService
 						.listerTousLesJouets(categorieCode, trancheCode));
-
+				
 				request.setAttribute("categories",
 						unService.listerToutesLesCategories());
 				request.setAttribute("tranches",
@@ -81,8 +89,9 @@ public class MultiController extends MultiActionController {
 
 		catch (MonException e) {
 			request.setAttribute("MesErreurs", e.getMessage());
+			System.out.println("ERREUR ="+e.getMessage());
 		}
-		destinationPage = "/ListeJouets";
+		destinationPage = "/jouet/ListeJouets";
 
 		return new ModelAndView(destinationPage);
 	}
