@@ -52,5 +52,8 @@ public class Catalogue implements java.io.Serializable {
 	public void setComportes(Set comportes) {
 		this.comportes = comportes;
 	}
-
+	
+	/**
+	 * StatCategorie() => rechercherDictionnaire() dans GestionCatalogue
+	 */
 }

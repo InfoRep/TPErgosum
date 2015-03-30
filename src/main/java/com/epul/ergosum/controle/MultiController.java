@@ -3,7 +3,6 @@ package com.epul.ergosum.controle;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,9 +20,12 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 import com.epul.ergosum.meserreurs.MonException;
 import com.epul.ergosum.metier.Catalogue;
 import com.epul.ergosum.metier.Categorie;
-import com.epul.ergosum.metier.GestionErgosum;
 import com.epul.ergosum.metier.Jouet;
 import com.epul.ergosum.metier.Trancheage;
+import com.epul.ergosum.metier.gestion.GestionCatalogue;
+import com.epul.ergosum.metier.gestion.GestionCategorie;
+import com.epul.ergosum.metier.gestion.GestionJouet;
+import com.epul.ergosum.metier.gestion.GestionTrancheAge;
 
 /**
  * Handles requests for the application home page.
@@ -60,28 +62,22 @@ public class MultiController extends MultiActionController {
 
 		String destinationPage = "";
 		try {
-			GestionErgosum unService = new GestionErgosum();
-			if (unService != null) {
-				int categorieCode;
-				int trancheCode;
-				String categorie = request.getParameter("codecateg");
-				String tranche = request.getParameter("codetranche");
-				if (categorie == null && tranche == null) {
-					categorieCode = 0;
-					trancheCode = 0;
-				} else {
-					categorieCode = Integer.parseInt(categorie);
-					trancheCode = Integer.parseInt(tranche);
-				}
-	
-				request.setAttribute("mesJouets", unService
-						.listerTousLesJouets(categorieCode, trancheCode));
-				
-				request.setAttribute("categories",
-						unService.listerToutesLesCategories());
-				request.setAttribute("tranches",
-						unService.listerToutesLesTranches());
+			int categorieCode;
+			int trancheCode;
+			String categorie = request.getParameter("codecateg");
+			String tranche = request.getParameter("codetranche");
+			if (categorie == null && tranche == null) {
+				categorieCode = 0;
+				trancheCode = 0;
+			} else {
+				categorieCode = Integer.parseInt(categorie);
+				trancheCode = Integer.parseInt(tranche);
 			}
+
+			request.setAttribute("mesJouets", GestionJouet.lister(categorieCode, trancheCode));
+			
+			request.setAttribute("categories", GestionCategorie.lister());
+			request.setAttribute("tranches", GestionTrancheAge.lister());
 		}
 
 		catch (MonException e) {
@@ -103,20 +99,13 @@ public class MultiController extends MultiActionController {
 		String destinationPage = "";
 
 		try {
-			GestionErgosum unService = new GestionErgosum();
+			// on passe les numéros de client et de vendeur
+			request.setAttribute("jouet", new Jouet());
+			request.setAttribute("categories", GestionCategorie.lister());
+			request.setAttribute("tranches", GestionTrancheAge.lister());
+			request.setAttribute("catalogues", GestionCatalogue.lister());
 
-			if (unService != null) {
-				// on passe les numéros de client et de vendeur
-				request.setAttribute("jouet", new Jouet());
-				request.setAttribute("categories",
-						unService.listerToutesLesCategories());
-				request.setAttribute("tranches",
-						unService.listerToutesLesTranches());
-				request.setAttribute("catalogues",
-						unService.listerTousLesCatalogues());
-
-				destinationPage = "/AjouterJouet";
-			}
+			destinationPage = "/AjouterJouet";
 		} catch (MonException e) {
 			request.setAttribute("MesErreurs", e.getMessage());
 		}
@@ -145,11 +134,7 @@ public class MultiController extends MultiActionController {
 
 		String destinationPage = "/Erreur";
 		try {
-			GestionErgosum unService = new GestionErgosum();
-
-			if (unService != null)
-				request.setAttribute("catalogues",
-						unService.listerTousLesCatalogues());
+			request.setAttribute("catalogues", GestionCatalogue.lister());
 			destinationPage = "/ChoixCatalogue";
 		} catch (MonException e) {
 			request.setAttribute("MesErreurs", e.getMessage());
@@ -168,18 +153,12 @@ public class MultiController extends MultiActionController {
 		String destinationPage = "Erreur";
 		try {
 			String id = request.getParameter("id");
-			GestionErgosum unService = new GestionErgosum();
-
-			if (unService != null) {
-				Jouet unJouet = unService.rechercherJouet(id);
-				request.setAttribute("jouet", unJouet);
-				request.setAttribute("categories",
-						unService.listerToutesLesCategories());
-				request.setAttribute("tranches",
-						unService.listerToutesLesTranches());
-				destinationPage = "/ModifierJouet";
-			}
-
+			
+			Jouet unJouet = GestionJouet.rechercher(id);
+			request.setAttribute("jouet", unJouet);
+			request.setAttribute("categories", GestionCategorie.lister());
+			request.setAttribute("tranches", GestionTrancheAge.lister());
+			destinationPage = "/ModifierJouet";
 		} catch (MonException e) {
 			request.setAttribute("MesErreurs", e.getMessage());
 		}
@@ -197,65 +176,58 @@ public class MultiController extends MultiActionController {
 		String destinationPage = "/Erreur";
 		try {
 			String id = request.getParameter("id");
-			GestionErgosum unService = new GestionErgosum();
-			if (unService != null) {
 
-				// fabrication du jouet à partir des paramètres de la requête
-				// Si le jouet n'est pas à créer, il faut le récupérer de la
-				// session
-				// courante
-				// Ensuite on peut modifier ses champs
+			// fabrication du jouet à partir des paramètres de la requête
+			// Si le jouet n'est pas à créer, il faut le récupérer de la
+			// session
+			// courante
+			// Ensuite on peut modifier ses champs
 
-				if (request.getParameter("type").equals("ajout"))
-					unJouet = new Jouet();
-				else { // on récupère le jouet courant
+			if (request.getParameter("type").equals("ajout"))
+				unJouet = new Jouet();
+			else { // on récupère le jouet courant
 
-					unJouet = unService.rechercherJouet(id);
-				}
-				unJouet.setNumero(request.getParameter("id"));
-				unJouet.setLibelle(request.getParameter("libelle"));
-				System.out.println("codecateg="
-						+ request.getParameter("codecateg"));
-				System.out.println("codetranche="
-						+ request.getParameter("codetranche"));
-				Categorie uneCateg = unService.rechercherCategorie(request
-						.getParameter("codecateg"));
-				unJouet.setCategorie(uneCateg);
-
-				Trancheage uneTranche = unService.rechercherTrancheage(request
-						.getParameter("codetranche"));
-				unJouet.setTrancheage(uneTranche);
-
-				// sauvegarde du jouet
-				if (request.getParameter("type").equals("modif")) {
-					unService.modifier(unJouet);
-				} else {
-
-					Catalogue leCatalogue = unService
-							.rechercherCatalogue(request
-									.getParameter("codecatalogue"));
-					System.out.println("Je suis à la quantité ");
-					;
-					int quantiteDistribution = Integer.parseInt(request
-							.getParameter("quantiteDistribution"));
-					if (quantiteDistribution > 0) {
-						leCatalogue
-								.setQuantiteDistribuee(leCatalogue
-										.getQuantiteDistribuee()
-										+ quantiteDistribution);
-						unService.modifierCatalogue(leCatalogue);
-					}
-					unService.ajouter(unJouet);
-				}
-				try {
-					request.setAttribute("mesJouets",
-							unService.listerTousLesJouets());
-					destinationPage = "/ListeJouets";
-				} catch (MonException e) {
-					request.setAttribute("MesErreurs", e.getMessage());
-				}
-
+				unJouet = GestionJouet.rechercher(id);
 			}
+			unJouet.setNumero(request.getParameter("id"));
+			unJouet.setLibelle(request.getParameter("libelle"));
+			System.out.println("codecateg="
+					+ request.getParameter("codecateg"));
+			System.out.println("codetranche="
+					+ request.getParameter("codetranche"));
+			Categorie uneCateg = GestionCategorie.rechercher(request.getParameter("codecateg"));
+			unJouet.setCategorie(uneCateg);
+
+			Trancheage uneTranche = GestionTrancheAge.rechercher(request.getParameter("codetranche"));
+			unJouet.setTrancheage(uneTranche);
+
+			// sauvegarde du jouet
+			if (request.getParameter("type").equals("modif")) {
+				GestionJouet.modifier(unJouet);
+			} else {
+
+				Catalogue leCatalogue = GestionCatalogue.rechercher(request
+								.getParameter("codecatalogue"));
+				System.out.println("Je suis à la quantité ");
+				;
+				int quantiteDistribution = Integer.parseInt(request
+						.getParameter("quantiteDistribution"));
+				if (quantiteDistribution > 0) {
+					leCatalogue
+							.setQuantiteDistribuee(leCatalogue
+									.getQuantiteDistribuee()
+									+ quantiteDistribution);
+					GestionCatalogue.modifier(leCatalogue);
+				}
+				GestionJouet.ajouter(unJouet);
+			}
+			try {
+				request.setAttribute("mesJouets", GestionJouet.lister());
+				destinationPage = "/ListeJouets";
+			} catch (MonException e) {
+				request.setAttribute("MesErreurs", e.getMessage());
+			}
+
 		} catch (Exception e) {
 			request.setAttribute("MesErreurs", e.getMessage());
 		}
@@ -273,27 +245,24 @@ public class MultiController extends MultiActionController {
 		String destinationPage = "";
 		try {
 			String id = request.getParameter("id");
-			GestionErgosum unService = new GestionErgosum();
-
-			if (unService != null) {
-				// recuperation de la liste des id a effacer
-				String[] ids = request.getParameterValues("id");
-				// effacement de la liste des id
-				try {
-					if (ids != null) {
-						unService.effacer(ids);
-					}
-					// preparation de la liste
-					request.setAttribute("mesJouets",
-							unService.listerTousLesJouets());
+			
+			// recuperation de la liste des id a effacer
+			String[] ids = request.getParameterValues("id");
+			// effacement de la liste des id
+			try {
+				if (ids != null) {
+					GestionJouet.effacer(ids);
 				}
-
-				catch (MonException e) {
-					request.setAttribute("MesErreurs", e.getMessage());
-				}
-
-				destinationPage = "/ListeJouets";
+				// preparation de la liste
+				request.setAttribute("mesJouets", GestionJouet.lister());
 			}
+
+			catch (MonException e) {
+				request.setAttribute("MesErreurs", e.getMessage());
+			}
+
+			destinationPage = "/ListeJouets";
+			
 		} catch (Exception e) {
 			request.setAttribute("MesErreurs", e.getMessage());
 		}
@@ -310,16 +279,12 @@ public class MultiController extends MultiActionController {
 		String destinationPage = "/Erreur";
 		try {
 			String id = request.getParameter("id");
-			GestionErgosum unService = new GestionErgosum();
-
-			if (unService != null) {
-				// preparation de la liste
-				request.setAttribute("mesCataloguesQuantites", unService
-						.listerCatalogueQuantites(Integer.parseInt(request
-								.getParameter("anneeDebut")), Integer
-								.parseInt(request.getParameter("nbAnnees"))));
-				destinationPage = "/AfficherCatalogues";
-			}
+			
+			// preparation de la liste
+			request.setAttribute("mesCataloguesQuantites", GestionCatalogue
+					.listerCatalogueQuantites(Integer.parseInt(request.getParameter("anneeDebut")),
+											  Integer.parseInt(request.getParameter("nbAnnees"))));
+			destinationPage = "/AfficherCatalogues";
 		}
 
 		catch (MonException e) {
@@ -338,19 +303,13 @@ public class MultiController extends MultiActionController {
 
 		String destinationPage = "/Erreur";
 		try {
-			String annee = request.getParameter("annee");
-			GestionErgosum unService = new GestionErgosum();
-
-			if (unService != null) {
-
-				HashMap<Categorie, Integer> hashCatInt = unService
-						.rechercherDictionnaire(request.getParameter("annee"));
-				request.setAttribute("dictionnaire", hashCatInt);
-				request.setAttribute("anneecatalogue", annee);
-				destinationPage = "/AfficherDictionnaire";
-			}
+			String annee = request.getParameter("annee"); //annee catalogue
+			
+			HashMap<Categorie, Integer> hashCatInt = GestionCatalogue.rechercherDictionnaire(request.getParameter("annee"));
+			request.setAttribute("dictionnaire", hashCatInt);
+			request.setAttribute("anneecatalogue", annee);
+			destinationPage = "/AfficherDictionnaire";
 		}
-
 		catch (MonException e) {
 			request.setAttribute("MesErreurs", e.getMessage());
 		}
