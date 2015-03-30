@@ -37,7 +37,7 @@ public class Connexion {
 			   // On récupère l'environnement
 			   Context envCtx = (Context) ctxt.lookup("java:comp/env");
 			   // On recherche la data source
-	           DataSource ds = (DataSource) envCtx.lookup("jdbc/DSMesStages");
+	           DataSource ds = (DataSource) envCtx.lookup("jdbc/DSergosum");
 	           conn= ds.getConnection();
 	       
 	       }
