@@ -1,4 +1,4 @@
-package com.epul.ergosum;
+package com.epul.ergosum.controle;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * Handles requests for the application home page.
  */
 @Controller
-public class HomeController {
+public class MultiController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MultiController.class);
 	
 	/**
 	 * Simply selects the home view to render by returning its name.
