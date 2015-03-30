@@ -1,0 +1,15 @@
+th {
+	text-align:center;
+	font-variant: small-caps;
+}
+
+.lienAccueil {
+	color:#00b0b0;	
+	font-weight:bold;
+}
+
+.lienAccueil:hover {
+	color:#0080ff;
+	text-decoration:none;
+}
+
