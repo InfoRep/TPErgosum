@@ -46,18 +46,55 @@ public class GestionCatalogue {
 		return mesCatalogues;
 	}
 	
+	/**
+	 * Rechercher un catalogue selon son id
+	 * @param parameter : annee
+	 * @return Catalogue
+	 * @throws MonException
+	 */
 	public static Catalogue rechercher(String parameter) throws MonException {
-		// TODO Auto-generated method stub
+		if (parameter != null && !parameter.trim().isEmpty())
+		{
+			String sql = "SELECT * FROM catalogue WHERE annee='"+parameter.trim()+"'";
+			System.out.println(sql);
+			
+			List<Object> rs = DialogueBd.lecture(sql);
+			
+			if (rs.size() > 0)
+			{
+				Catalogue c = new Catalogue();
+				
+				c.setAnnee(Integer.valueOf(rs.get(0).toString()));
+				c.setQuantiteDistribuee(Integer.valueOf(rs.get(1).toString()));
+				
+				//TODO Gérer Comporte ??
+				
+				return c;
+			} else {
+				throw new MonException("Aucun catalogue trouvé avec l'id : "+parameter);
+			}
+		}
+		
 		return null;
 	}
 
-		
+	/**
+	 * Modifier un catalogue
+	 * @param leCatalogue: Catalogue à modifier
+	 * @throws MonException
+	 */
 	public static void modifier(Catalogue leCatalogue) throws MonException {
 		if (leCatalogue != null)
 		{
+			String sql = "";
 			
+			sql += "UDPATE catalogue SET ";
+			sql += "quantiteDistribuee = '"+leCatalogue.getQuantiteDistribuee()+"' ";
+			sql += "WHERE annee = '"+leCatalogue.getAnnee()+"'";
+			
+			System.out.println(sql);
+			DialogueBd.insertionBD(sql);
 		}
-		
 	}
 
 	public static List<CatalogueQuantites> listerCatalogueQuantites(int parseInt, int parseInt2) throws MonException {
@@ -84,6 +121,7 @@ public class GestionCatalogue {
 			c.setCodecateg(rs.get(index+0).toString());
 			c.setLibcateg(rs.get(index+1).toString());
 			//TODO setJouet ???
+			
 	
 			hashCatInt.put(c, Integer.valueOf(rs.get(index+2).toString())); //Categorie, somme quantite
 			
