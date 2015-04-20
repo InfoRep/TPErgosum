@@ -23,7 +23,8 @@
     <jsp:body>
     	<!-- Affichage du dictionnaire  -->
     	<c:if test="${annee != null}">
-   		<h3 style="margin-top:0">Voici le dictionnaire pour le catalogue choisi : (${fn:length(dictionnaire)})</h3>
+   		<h4 style="margin-top:0">Voici le dictionnaire pour le catalogue choisi : </h4>
+   		<i><b>${fn:length(dictionnaire)}</b> lignes</i>
    		<div class="row">
    			<div class="col-md-1"></div>
    			<div class="col-md-7">

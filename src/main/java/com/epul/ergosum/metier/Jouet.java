@@ -73,5 +73,16 @@ public class Jouet implements java.io.Serializable {
 	public void setComportes(Set comportes) {
 		this.comportes = comportes;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) return true;
+		if (obj == null) return false;
+		if (obj instanceof Jouet)
+		{
+			return this.getNumero().contentEquals(((Jouet) obj).getNumero());
+		}
+		return false;
+	}
 
 }

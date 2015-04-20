@@ -73,6 +73,21 @@
 					<ul class="dropdown-menu" role="menu">
 						<li><a href="${pageContext.request.contextPath}/jouet/afficherJouets.htm">Lister</a></li>
 						<li><a href="#">Ajouter</a></li>
+						<li class="divider"></li>
+						<li>
+							<form method="post" role="search" action="#">
+					    		<input type="hidden" value="rechercheJouet" name="action"  />
+						        <div class="form-group"  style="margin-bottom:2px;">
+						        	<div class="input-group">
+							        	<span class="input-group-addon" style="padding: 2px" id="basic-addon1">
+							        		<button style="padding:0;margin: 0" class="btn-link glyphicon glyphicon-search"></button>
+							        	</span>
+							         	<input type="text" class="form-control" placeholder="numero" name="champ" />
+							         </div>
+						        </div>
+					     	</form>
+					     	<a href="#">Recherche avancée</a>
+						</li>
 					</ul>
 				</li>
 				<li class="dropdown">
@@ -83,7 +98,6 @@
 					<ul class="dropdown-menu" role="menu">
 						<li><a href="#">Par interval</a></li>
 						<li><a href="#">Par catégorie</a></li>
-						<li><a href="#">Ajouter</a></li>
 					</ul>
 				</li>
 				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>

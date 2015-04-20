@@ -56,4 +56,15 @@ public class Catalogue implements java.io.Serializable {
 	/**
 	 * StatCategorie() => rechercherDictionnaire() dans GestionCatalogue
 	 */
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) return true;
+		if (obj == null) return false;
+		if (obj instanceof Catalogue)
+		{
+			return this.getAnnee() == ((Catalogue)obj).getAnnee();
+		}
+		return false;
+	}
 }

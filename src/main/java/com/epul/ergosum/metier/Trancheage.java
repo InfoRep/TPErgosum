@@ -62,4 +62,15 @@ public class Trancheage implements java.io.Serializable {
 		this.jouets = jouets;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) return true;
+		if (obj == null) return false;
+		if (obj instanceof Trancheage)
+		{
+			return this.getCodetranche().contentEquals(((Trancheage)obj).getCodetranche());
+		}
+		
+		return false;
+	}
 }

@@ -53,7 +53,10 @@ public class GestionCatalogue {
 
 		
 	public static void modifier(Catalogue leCatalogue) throws MonException {
-		// TODO Auto-generated method stub
+		if (leCatalogue != null)
+		{
+			
+		}
 		
 	}
 

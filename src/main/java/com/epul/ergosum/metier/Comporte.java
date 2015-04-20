@@ -60,5 +60,18 @@ public class Comporte implements java.io.Serializable {
 	public void setQuantite(Integer quantite) {
 		this.quantite = quantite;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) return true;
+		if (obj == null) return false;
+		if (obj instanceof Comporte)
+		{
+			Comporte c = (Comporte)obj;
+			return c.getId().equals(this.getId());
+		}
+		
+		return false;
+	}
 
 }
