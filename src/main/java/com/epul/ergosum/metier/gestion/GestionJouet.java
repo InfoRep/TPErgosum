@@ -123,7 +123,18 @@ public class GestionJouet {
 	 * @param ids : liste des ids des jouets à effacer
 	 */
 	public static void effacer(String[] ids) throws MonException {
-		// TODO Auto-generated method stub
+		if (ids != null && ids.length > 0)
+		{
+			String strIn = "";
+			for (String id : ids)
+				strIn += "'"+id+"', ";
+			strIn = strIn.substring(0, strIn.length()-1); //suppr le dernier ", "
+			
+			String sql = "DELETE FROM jouet WHERE numero in ("+strIn+")";
+			System.out.println(sql);
+			
+			DialogueBd.insertionBD(sql);
+		}
 		
 	}
 }
