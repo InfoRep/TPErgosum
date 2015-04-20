@@ -50,5 +50,18 @@ public class Categorie implements java.io.Serializable {
 	public void setJouets(Set jouets) {
 		this.jouets = jouets;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+		
+		if (obj instanceof Categorie)
+		{
+			Categorie c = (Categorie)obj;
+			return c.getCodecateg().contentEquals(this.getCodecateg());
+		}
+		
+		return false;
+	}
 
 }
