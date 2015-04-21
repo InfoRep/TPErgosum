@@ -84,6 +84,7 @@ public class JouetController extends MultiActionController {
 			destinationPage = "/jouet/SaisieJouet";
 		} catch (MonException e) {
 			request.setAttribute("MesErreurs", e.getMessage());
+			destinationPage = "/Erreur";
 		}
 
 		return new ModelAndView(destinationPage);
@@ -96,7 +97,7 @@ public class JouetController extends MultiActionController {
 	public ModelAndView modifierJouet(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
-		String destinationPage = "Erreur";
+		String destinationPage = "/Erreur";
 		try {
 			String id = request.getParameter("id");
 			

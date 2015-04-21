@@ -95,7 +95,7 @@ public class GestionJouet {
 	 */
 	public static Jouet rechercher(String numero) throws MonException {
 		// TODO Auto-generated method stub
-		String sql = "SELECT * FROM stages WHERE numero = '"+numero+"'";
+		String sql = "SELECT * FROM jouet WHERE numero = '"+numero+"'";
 		
 		List<Object> rs = DialogueBd.lecture(sql); 
 		Jouet jouet = null;
