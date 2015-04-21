@@ -81,7 +81,7 @@ public class JouetController extends MultiActionController {
 			request.setAttribute("tranches", GestionTrancheAge.lister());
 			request.setAttribute("catalogues", GestionCatalogue.lister());
 
-			destinationPage = "/AjouterJouet";
+			destinationPage = "/jouet/SaisieJouet";
 		} catch (MonException e) {
 			request.setAttribute("MesErreurs", e.getMessage());
 		}
@@ -104,7 +104,7 @@ public class JouetController extends MultiActionController {
 			request.setAttribute("jouet", unJouet);
 			request.setAttribute("categories", GestionCategorie.lister());
 			request.setAttribute("tranches", GestionTrancheAge.lister());
-			destinationPage = "/ModifierJouet";
+			destinationPage = "/jouet/SaisieJouet";
 		} catch (MonException e) {
 			request.setAttribute("MesErreurs", e.getMessage());
 		}
