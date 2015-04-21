@@ -93,9 +93,25 @@ public class GestionJouet {
 	 * @return Jouet
 	 * @throws MonException
 	 */
-	public static Jouet rechercher(String id) throws MonException {
+	public static Jouet rechercher(String numero) throws MonException {
 		// TODO Auto-generated method stub
-		return null;
+		String sql = "SELECT * FROM stages WHERE numero = '"+numero+"'";
+		
+		List<Object> rs = DialogueBd.lecture(sql); 
+		Jouet jouet = null;
+		
+		if (rs.size() > 0)
+		{ 
+			//retourner le jouet
+			// il faut redecouper la liste pour retrouver les lignes
+			jouet = new Jouet();
+			jouet.setNumero(rs.get(0).toString());
+			jouet.setCategorie(new Categorie(rs.get(1).toString()));
+			jouet.setTrancheage(new Trancheage(rs.get(2).toString()));
+			jouet.setLibelle(rs.get(3).toString());
+		}
+		
+        return jouet;
 	}
 	
 	/**
@@ -105,17 +121,38 @@ public class GestionJouet {
 	 */
 	public static void modifier(Jouet unJouet) throws MonException {
 		// TODO Auto-generated method stub
+		String sql="";
+		
+		sql = "UPDATE jouet SET ";
+		sql += "numero = '"+unJouet.getNumero()+"'";
+		sql += ", categorie = '"+unJouet.getCategorie()+"'";
+		sql += ", trancheage = '"+unJouet.getTrancheage()+"'";
+		sql += ", libelle = '"+unJouet.getLibelle()+"'";
+		sql += "WHERE numero = '"+unJouet.getNumero()+"'";
+		
+		System.out.println(sql);
+		
+		DialogueBd.insertionBD(sql);
 		
 	}
 
 	/**
 	 * Ajouter un jouet
-	 * @param unJouet : jouer à insérer dans la db
+	 * @param unJouet : jouet à insérer dans la db
 	 * @throws MonException
 	 */
 	public static void ajouter(Jouet unJouet) throws MonException {
 		// TODO Auto-generated method stub
+		String sql="";
 		
+		sql = "INSERT INTO jouet (numero, categorie, trancheage ,";
+		sql = sql + " libelle, comportes) ";
+		sql = sql + " VALUES ( \'" + unJouet.getNumero() + "\', \'" + unJouet.getCategorie() + "\', ";
+		sql = sql + "\' " + unJouet.getTrancheage() + "\', " + "\' " + unJouet.getLibelle() + "\')";
+
+		System.out.println(sql);
+		
+		DialogueBd.insertionBD(sql);
 	}
 
 	/**
