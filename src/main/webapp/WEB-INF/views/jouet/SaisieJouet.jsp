@@ -14,7 +14,7 @@
     
     <jsp:body>
 	  	<form method="post" action="Controleur?action=ajoutJouet" class="form-horizontal" id="form">
-	  		<input type="hidden" name="typeAction" value="${type}"  id="type"/>
+	  		<input type="hidden" name="type" value="${type}"  id="type"/>
 	  		
 	  		<div class="form-group">
 	  			<label for="id" class="control-label col-md-2">Numéro</label>

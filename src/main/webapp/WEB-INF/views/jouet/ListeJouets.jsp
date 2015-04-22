@@ -13,24 +13,31 @@
     <jsp:body>
    		<div class="row">
         	<div class="col-md-12">
-		        <table class="table">
-			  		<tr>
-					 	<TH> Numero </TH>
-						<TH> Libelle </TH>
-					 	<TH> Code tranche age </TH>
-					 	<TH> Code categorie </TH>
-			 		</tr>
-				 	
-				 	<c:forEach  items="${mesJouets}"  var="item" >
-				 	<tr class="text-center">
-				     	<td class="id"><a href="">${item.numero}</a></td>
-				     	<td class="text-left libelle">${item.libelle}</td>
-				       
-				      	<td>${item.categorie.codecateg}</td>
-					  	<td>${item.trancheage.codetranche}</td>
-				  	</tr>
-				 	</c:forEach>
-				</table>
+		        <form method="post" action="effacerJouet.htm"> 
+			        <table class="table">
+				  		<tr>
+						 	<TH> Numero </TH>
+							<TH> Libelle </TH>
+						 	<TH> Code tranche age </TH>
+						 	<TH> Code categorie </TH>
+						 	<th></th>
+						 	<TH><button class="btn btn-primary"> Supprimer </button></TH>
+				 		</tr>
+					 	
+					 	<c:forEach  items="${mesJouets}"  var="item" >
+					 	<tr class="text-center">
+					     	<td class="id"><a href="modifierJouet.htm?id=${item.numero}">${item.numero}</a></td>
+					     	<td class="text-left libelle">${item.libelle}</td>
+					       
+					      	<td>${item.categorie.codecateg}</td>
+						  	<td>${item.trancheage.codetranche}</td>
+						  	<td><a href="modifierJouet.htm?id=${item.numero}" class="btn btn-primary">Modifier</a></td>
+						  	<td><input type="checkbox" name="id" value="${item.numero}" /></td>
+						  	
+					  	</tr>
+					 	</c:forEach>
+					</table>
+				</form>
 			</div>
 		</div>
     </jsp:body>

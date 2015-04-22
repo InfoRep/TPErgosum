@@ -146,13 +146,15 @@ public class GestionJouet {
 		String sql="";
 		
 		sql = "INSERT INTO jouet (numero, categorie, trancheage ,";
-		sql = sql + " libelle, comportes) ";
+		sql = sql + " libelle) ";
 		sql = sql + " VALUES ( \'" + unJouet.getNumero() + "\', \'" + unJouet.getCategorie() + "\', ";
 		sql = sql + "\' " + unJouet.getTrancheage() + "\', " + "\' " + unJouet.getLibelle() + "\')";
 
 		System.out.println(sql);
 		
 		DialogueBd.insertionBD(sql);
+		
+		
 	}
 
 	/**
@@ -165,7 +167,7 @@ public class GestionJouet {
 			String strIn = "";
 			for (String id : ids)
 				strIn += "'"+id+"', ";
-			strIn = strIn.substring(0, strIn.length()-1); //suppr le dernier ", "
+			strIn = strIn.substring(0, strIn.length()-2); //suppr le dernier ", "
 			
 			String sql = "DELETE FROM jouet WHERE numero in ("+strIn+")";
 			System.out.println(sql);

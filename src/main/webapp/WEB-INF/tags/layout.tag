@@ -72,7 +72,7 @@
 					</a>
 					<ul class="dropdown-menu" role="menu">
 						<li><a href="${pageContext.request.contextPath}/jouet/afficherJouets.htm">Lister</a></li>
-						<li><a href="#">Ajouter</a></li>
+						<li><a href="${pageContext.request.contextPath}/jouet/ajouterJouet.htm">Ajouter</a></li>
 						<li class="divider"></li>
 						<li>
 							<form method="post" role="search" action="#">

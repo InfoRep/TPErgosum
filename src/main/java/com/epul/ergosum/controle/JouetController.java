@@ -73,8 +73,10 @@ public class JouetController extends MultiActionController {
 			HttpServletResponse response) throws Exception {
 
 		String destinationPage = "";
-
+		
 		try {
+			request.setAttribute("type", "ajout");
+			
 			// on passe les numéros de client et de vendeur
 			request.setAttribute("jouet", new Jouet());
 			request.setAttribute("categories", GestionCategorie.lister());
@@ -99,6 +101,8 @@ public class JouetController extends MultiActionController {
 
 		String destinationPage = "/Erreur";
 		try {
+			request.setAttribute("type", "modif");
+			
 			String id = request.getParameter("id");
 			
 			Jouet unJouet = GestionJouet.rechercher(id);
@@ -171,7 +175,7 @@ public class JouetController extends MultiActionController {
 			}
 			try {
 				request.setAttribute("mesJouets", GestionJouet.lister());
-				destinationPage = "/ListeJouets";
+				destinationPage = "/jouet/ListeJouets";
 			} catch (MonException e) {
 				request.setAttribute("MesErreurs", e.getMessage());
 			}
@@ -191,27 +195,35 @@ public class JouetController extends MultiActionController {
 			HttpServletResponse response) throws Exception {
 
 		String destinationPage = "";
-		try {
-			String id = request.getParameter("id");
-			
+		try {			
 			// recuperation de la liste des id a effacer
 			String[] ids = request.getParameterValues("id");
+			
 			// effacement de la liste des id
 			try {
 				if (ids != null) {
+					
 					GestionJouet.effacer(ids);
+					
+					request.setAttribute("messSuccess", "Les jouets ont bien été supprimés.");
+				}
+				else 
+				{
+					request.setAttribute("messWarning", "Aucun jouet n'a été sélectionné.");
 				}
 				// preparation de la liste
 				request.setAttribute("mesJouets", GestionJouet.lister());
 			}
 
 			catch (MonException e) {
+				destinationPage = "/Erreur";
 				request.setAttribute("MesErreurs", e.getMessage());
 			}
 
-			destinationPage = "/ListeJouets";
+			destinationPage = "/jouet/ListeJouets";
 			
 		} catch (Exception e) {
+			destinationPage = "/Erreur";
 			request.setAttribute("MesErreurs", e.getMessage());
 		}
 		return new ModelAndView(destinationPage);
