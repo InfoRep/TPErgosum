@@ -13,7 +13,7 @@
     </jsp:attribute>
     
     <jsp:body>
-	  	<form method="post" action="Controleur?action=ajoutJouet" class="form-horizontal" id="form">
+	  	<form method="post" action="sauverJouet.htm" class="form-horizontal" id="form">
 	  		<input type="hidden" name="type" value="${type}"  id="type"/>
 	  		
 	  		<div class="form-group">

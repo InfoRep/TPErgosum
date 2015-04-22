@@ -52,8 +52,8 @@ public class JouetController extends MultiActionController {
 
 			request.setAttribute("mesJouets", GestionJouet.lister(categorieCode, trancheCode));
 			
-			request.setAttribute("categories", GestionCategorie.lister());
-			request.setAttribute("tranches", GestionTrancheAge.lister());
+			//request.setAttribute("categories", GestionCategorie.lister());
+			//request.setAttribute("tranches", GestionTrancheAge.lister());
 		}
 
 		catch (MonException e) {

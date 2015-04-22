@@ -18,10 +18,10 @@
 				  		<tr>
 						 	<TH> Numero </TH>
 							<TH> Libelle </TH>
-						 	<TH> Code tranche age </TH>
-						 	<TH> Code categorie </TH>
+						 	<TH> Tranche age </TH>
+						 	<TH> Catégorie </TH>
 						 	<th></th>
-						 	<TH><button class="btn btn-primary"> Supprimer </button></TH>
+						 	<TH><button class="btn btn-danger"> Supprimer </button></TH>
 				 		</tr>
 					 	
 					 	<c:forEach  items="${mesJouets}"  var="item" >
@@ -29,8 +29,8 @@
 					     	<td class="id"><a href="modifierJouet.htm?id=${item.numero}">${item.numero}</a></td>
 					     	<td class="text-left libelle">${item.libelle}</td>
 					       
-					      	<td>${item.categorie.codecateg}</td>
-						  	<td>${item.trancheage.codetranche}</td>
+					      	<td>${item.trancheage.agemin}-${item.trancheage.agemax} ans</td>
+						  	<td>${item.categorie.libcateg}</td>
 						  	<td><a href="modifierJouet.htm?id=${item.numero}" class="btn btn-primary">Modifier</a></td>
 						  	<td><input type="checkbox" name="id" value="${item.numero}" /></td>
 						  	

@@ -49,7 +49,9 @@ public class GestionTrancheAge {
 		List<Object> rs;
 		
 		//Requete SQL Categorie
-		rs = DialogueBd.lecture("SELECT * FROM trancheage WHERE codetranche ='"+parameter+"'");
+		String sql = "SELECT * FROM trancheage WHERE codetranche ='"+parameter+"'";
+		rs = DialogueBd.lecture(sql);
+		System.out.println(sql);
 		
 		Trancheage t = null;
 		

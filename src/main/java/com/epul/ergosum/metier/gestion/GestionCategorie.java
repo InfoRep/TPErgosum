@@ -50,7 +50,10 @@ public class GestionCategorie {
 		List<Object> rs;
 		
 		//Requete SQL Categorie
-		rs = DialogueBd.lecture("SELECT * FROM categorie WHERE codecateg ='"+parameter+"'");
+		String sql = "SELECT * FROM categorie WHERE codecateg ='"+parameter+"'";
+		System.out.println(sql);
+		rs = DialogueBd.lecture(sql);
+		
 		
 		Categorie c = null;
 		

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.epul.ergosum.meserreurs.MonException;
 import com.epul.ergosum.metier.Categorie;
+import com.epul.ergosum.metier.Comporte;
 import com.epul.ergosum.metier.Jouet;	
 import com.epul.ergosum.metier.Trancheage;
 import com.epul.ergosum.persistance.DialogueBd;
@@ -64,15 +65,13 @@ public class GestionJouet {
 			if (categorieCode > 0)
 				j.setCategorie(cat);
 			else {
-				//TODO Chaque jouet a une cat différente, rechercher la cat associer au jouet 
-				j.setCategorie(new Categorie(rs.get(index+1).toString())); //A modif
+				j.setCategorie(GestionCategorie.rechercher(rs.get(index+1).toString())); //rechercher la categorie associé au jouet
 			}
 			
 			if (trancheCode > 0)
 				j.setTrancheage(trancheage);
 			else {
-				//TODO Chaque jouet a une tranche age différente, rechercher la tranche age associer au jouet 
-				j.setTrancheage(new Trancheage(rs.get(index+2).toString())); //A modif
+				j.setTrancheage(GestionTrancheAge.rechercher(rs.get(index+2).toString())); // rechercher la tranche age associer au jouet 
 			}
 			
 			mesJouets.add(j);
@@ -106,8 +105,8 @@ public class GestionJouet {
 			// il faut redecouper la liste pour retrouver les lignes
 			jouet = new Jouet();
 			jouet.setNumero(rs.get(0).toString());
-			jouet.setCategorie(new Categorie(rs.get(1).toString()));
-			jouet.setTrancheage(new Trancheage(rs.get(2).toString()));
+			jouet.setCategorie(GestionCategorie.rechercher(rs.get(1).toString())); //rechercher cat dans bdd
+			jouet.setTrancheage(GestionTrancheAge.rechercher(rs.get(2).toString())); //rechercher tranche age dans bdd
 			jouet.setLibelle(rs.get(3).toString());
 		}
 		
@@ -120,13 +119,12 @@ public class GestionJouet {
 	 * @throws MonException
 	 */
 	public static void modifier(Jouet unJouet) throws MonException {
-		// TODO Auto-generated method stub
 		String sql="";
 		
 		sql = "UPDATE jouet SET ";
 		sql += "numero = '"+unJouet.getNumero()+"'";
-		sql += ", categorie = '"+unJouet.getCategorie()+"'";
-		sql += ", trancheage = '"+unJouet.getTrancheage()+"'";
+		sql += ", categorie = '"+unJouet.getCategorie().getCodecateg()+"'";
+		sql += ", trancheage = '"+unJouet.getTrancheage().getCodetranche()+"'";
 		sql += ", libelle = '"+unJouet.getLibelle()+"'";
 		sql += "WHERE numero = '"+unJouet.getNumero()+"'";
 		
@@ -134,6 +132,15 @@ public class GestionJouet {
 		
 		DialogueBd.insertionBD(sql);
 		
+		//Update valeurs dans comportes 
+		for (Comporte c : unJouet.getComportes())
+		{
+			String req = "UPDATE comporte SET quantite = '"+c.getQuantite()+"'"
+					+ " WHERE annee='"+c.getId().getAnnee()+"' and numero = '"+c.getId().getNumero()+"'";
+			
+			System.out.println(req);
+			DialogueBd.insertionBD(sql);
+		}
 	}
 
 	/**
@@ -145,16 +152,22 @@ public class GestionJouet {
 		// TODO Auto-generated method stub
 		String sql="";
 		
-		sql = "INSERT INTO jouet (numero, categorie, trancheage ,";
-		sql = sql + " libelle) ";
-		sql = sql + " VALUES ( \'" + unJouet.getNumero() + "\', \'" + unJouet.getCategorie() + "\', ";
-		sql = sql + "\' " + unJouet.getTrancheage() + "\', " + "\' " + unJouet.getLibelle() + "\')";
+		sql = "INSERT INTO jouet (numero, codecateg, codetranche, libelle) ";
+		sql = sql + " VALUES ( '" + unJouet.getNumero() + "', '" + unJouet.getCategorie().getCodecateg() + "', ";
+		sql = sql + "' " + unJouet.getTrancheage().getCodetranche() + "', " + "' " + unJouet.getLibelle() + "')";
 
 		System.out.println(sql);
 		
 		DialogueBd.insertionBD(sql);
 		
-		
+		//Insert valeurs dans comportes 
+		for (Comporte c : unJouet.getComportes())
+		{
+			String req = "INSERT INTO comporte VALUES ('"+c.getId().getAnnee()+"', '"+c.getId().getNumero()+"', '"+c.getQuantite()+"')";
+			
+			System.out.println(req);
+			DialogueBd.insertionBD(req);
+		}
 	}
 
 	/**
@@ -164,9 +177,17 @@ public class GestionJouet {
 	public static void effacer(String[] ids) throws MonException {
 		if (ids != null && ids.length > 0)
 		{
-			String strIn = "";
+			//delete from comporte table
+			String strIn = ""; //In for sql delete jouet
 			for (String id : ids)
-				strIn += "'"+id+"', ";
+			{
+				String req = "DELETE FROM comporte WHERE numero='"+id+"'";
+				System.out.println(req);
+				DialogueBd.insertionBD(req);
+				
+				strIn += "'"+id+"', "; //for delete jouet
+			}
+			
 			strIn = strIn.substring(0, strIn.length()-2); //suppr le dernier ", "
 			
 			String sql = "DELETE FROM jouet WHERE numero in ("+strIn+")";
