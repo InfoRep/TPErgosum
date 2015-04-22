@@ -8,8 +8,6 @@ import com.epul.ergosum.meserreurs.MonException;
 import com.epul.ergosum.metier.Catalogue;
 import com.epul.ergosum.metier.CatalogueQuantites;
 import com.epul.ergosum.metier.Categorie;
-import com.epul.ergosum.metier.Jouet;
-import com.epul.ergosum.metier.Trancheage;
 import com.epul.ergosum.persistance.DialogueBd;
 
 public class GestionCatalogue {
@@ -67,7 +65,7 @@ public class GestionCatalogue {
 				c.setAnnee(Integer.valueOf(rs.get(0).toString()));
 				c.setQuantiteDistribuee(Integer.valueOf(rs.get(1).toString()));
 				
-				//TODO Gérer Comporte ??
+				//TODO ? comporte
 				
 				return c;
 			} else {
@@ -88,7 +86,7 @@ public class GestionCatalogue {
 		{
 			String sql = "";
 			
-			sql += "UDPATE catalogue SET ";
+			sql += "UPDATE catalogue SET ";
 			sql += "quantiteDistribuee = '"+leCatalogue.getQuantiteDistribuee()+"' ";
 			sql += "WHERE annee = '"+leCatalogue.getAnnee()+"'";
 			

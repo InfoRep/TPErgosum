@@ -1,12 +1,15 @@
 package com.epul.ergosum.metier.gestion;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.epul.ergosum.meserreurs.MonException;
 import com.epul.ergosum.metier.Categorie;
 import com.epul.ergosum.metier.Comporte;
-import com.epul.ergosum.metier.Jouet;	
+import com.epul.ergosum.metier.ComporteId;
+import com.epul.ergosum.metier.Jouet;
 import com.epul.ergosum.metier.Trancheage;
 import com.epul.ergosum.persistance.DialogueBd;
 
@@ -93,7 +96,6 @@ public class GestionJouet {
 	 * @throws MonException
 	 */
 	public static Jouet rechercher(String numero) throws MonException {
-		// TODO Auto-generated method stub
 		String sql = "SELECT * FROM jouet WHERE numero = '"+numero+"'";
 		
 		List<Object> rs = DialogueBd.lecture(sql); 
@@ -108,7 +110,31 @@ public class GestionJouet {
 			jouet.setCategorie(GestionCategorie.rechercher(rs.get(1).toString())); //rechercher cat dans bdd
 			jouet.setTrancheage(GestionTrancheAge.rechercher(rs.get(2).toString())); //rechercher tranche age dans bdd
 			jouet.setLibelle(rs.get(3).toString());
-		}
+			
+			//LOAD COMPORTE
+			String req = "SELECT * FROM comporte WHERE numero = '"+numero+"'";
+			System.out.println(req);
+			List<Object> rsComporte = DialogueBd.lecture(req); 
+			Set<Comporte> sComporte = new HashSet<Comporte>();
+			int index = 0;
+			while(index < rsComporte.size())
+			{
+				Comporte c = new Comporte();
+				ComporteId cid = new ComporteId(Integer.valueOf(rsComporte.get(index+0).toString()), numero);
+				
+				c.setId(cid);
+				c.setCatalogue(GestionCatalogue.rechercher(rsComporte.get(index+0).toString())); //rechercher l'object catalogue associé
+				c.setJouet(jouet);
+				c.setQuantite(Integer.valueOf(rsComporte.get(index+2).toString()));
+				
+				sComporte.add(c);
+				
+				index += 3;
+			}
+			
+			jouet.setComportes(sComporte);
+		} else 
+			throw new MonException("Aucun jouet trouvé avec l'id : "+numero);
 		
         return jouet;
 	}
@@ -122,24 +148,24 @@ public class GestionJouet {
 		String sql="";
 		
 		sql = "UPDATE jouet SET ";
-		sql += "numero = '"+unJouet.getNumero()+"'";
-		sql += ", categorie = '"+unJouet.getCategorie().getCodecateg()+"'";
-		sql += ", trancheage = '"+unJouet.getTrancheage().getCodetranche()+"'";
+		sql += "codecateg = '"+unJouet.getCategorie().getCodecateg()+"'";
+		sql += ", codetranche = '"+unJouet.getTrancheage().getCodetranche()+"'";
 		sql += ", libelle = '"+unJouet.getLibelle()+"'";
-		sql += "WHERE numero = '"+unJouet.getNumero()+"'";
+		sql += " WHERE numero = '"+unJouet.getNumero()+"'";
 		
 		System.out.println(sql);
 		
 		DialogueBd.insertionBD(sql);
 		
-		//Update valeurs dans comportes 
+		//Update valeurs dans comportes : supprimer les lignes pour les remettres ensuites si valeur != 0
+		// (Possibilité d'ajouter une quantité à une autre année)
 		for (Comporte c : unJouet.getComportes())
 		{
-			String req = "UPDATE comporte SET quantite = '"+c.getQuantite()+"'"
-					+ " WHERE annee='"+c.getId().getAnnee()+"' and numero = '"+c.getId().getNumero()+"'";
-			
-			System.out.println(req);
-			DialogueBd.insertionBD(sql);
+			try {
+				DialogueBd.insertionBD("INSERT INTO comporte VALUES ('"+c.getId().getAnnee()+"', '"+c.getId().getNumero()+"', '"+c.getQuantite()+"')");
+			} catch (Exception e) {
+				DialogueBd.insertionBD("UPDATE comporte SET quantite = '"+c.getQuantite()+"' WHERE annee='"+c.getId().getAnnee()+"' and numero = '"+c.getId().getNumero()+"'");
+			}								
 		}
 	}
 
@@ -149,12 +175,11 @@ public class GestionJouet {
 	 * @throws MonException
 	 */
 	public static void ajouter(Jouet unJouet) throws MonException {
-		// TODO Auto-generated method stub
 		String sql="";
 		
 		sql = "INSERT INTO jouet (numero, codecateg, codetranche, libelle) ";
 		sql = sql + " VALUES ( '" + unJouet.getNumero() + "', '" + unJouet.getCategorie().getCodecateg() + "', ";
-		sql = sql + "' " + unJouet.getTrancheage().getCodetranche() + "', " + "' " + unJouet.getLibelle() + "')";
+		sql = sql + "'" + unJouet.getTrancheage().getCodetranche() + "', " + "'" + unJouet.getLibelle() + "')";
 
 		System.out.println(sql);
 		

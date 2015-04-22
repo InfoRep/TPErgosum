@@ -38,8 +38,6 @@ public class DialogueBd {
 			Statement unstatement = cnx.createStatement();
 	        unstatement.execute(mysql);
 	        
-	        System.out.println("Requete execute!");
-	        
 	        // on ferme la connexion
 	        cnx.close();
 	     }

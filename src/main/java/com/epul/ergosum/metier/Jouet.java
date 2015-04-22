@@ -15,7 +15,7 @@ public class Jouet implements java.io.Serializable {
 	private Trancheage trancheage;
 	private String libelle;
 	private Set<Comporte> comportes;
-
+	
 	public Jouet() {
 		comportes = new HashSet<Comporte>(0);
 	}

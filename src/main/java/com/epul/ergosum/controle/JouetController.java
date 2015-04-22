@@ -1,10 +1,10 @@
 package com.epul.ergosum.controle;
 
+import java.util.Iterator;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,6 +13,8 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 import com.epul.ergosum.meserreurs.MonException;
 import com.epul.ergosum.metier.Catalogue;
 import com.epul.ergosum.metier.Categorie;
+import com.epul.ergosum.metier.Comporte;
+import com.epul.ergosum.metier.ComporteId;
 import com.epul.ergosum.metier.Jouet;
 import com.epul.ergosum.metier.Trancheage;
 import com.epul.ergosum.metier.gestion.GestionCatalogue;
@@ -25,9 +27,6 @@ import com.epul.ergosum.metier.gestion.GestionTrancheAge;
  */
 @Controller
 public class JouetController extends MultiActionController {
-
-	private static final Logger logger = LoggerFactory
-			.getLogger(JouetController.class);
 
 	/**
 	 * Affichage de tous les jouets
@@ -79,6 +78,7 @@ public class JouetController extends MultiActionController {
 			
 			// on passe les numéros de client et de vendeur
 			request.setAttribute("jouet", new Jouet());
+			
 			request.setAttribute("categories", GestionCategorie.lister());
 			request.setAttribute("tranches", GestionTrancheAge.lister());
 			request.setAttribute("catalogues", GestionCatalogue.lister());
@@ -107,8 +107,11 @@ public class JouetController extends MultiActionController {
 			
 			Jouet unJouet = GestionJouet.rechercher(id);
 			request.setAttribute("jouet", unJouet);
+			
 			request.setAttribute("categories", GestionCategorie.lister());
 			request.setAttribute("tranches", GestionTrancheAge.lister());
+			request.setAttribute("catalogues", GestionCatalogue.lister());
+			
 			destinationPage = "/jouet/SaisieJouet";
 		} catch (MonException e) {
 			request.setAttribute("MesErreurs", e.getMessage());
@@ -128,51 +131,61 @@ public class JouetController extends MultiActionController {
 		try {
 			String id = request.getParameter("id");
 
-			// fabrication du jouet à partir des paramètres de la requête
-			// Si le jouet n'est pas à créer, il faut le récupérer de la
-			// session
-			// courante
-			// Ensuite on peut modifier ses champs
-
 			Jouet unJouet = null;
 			if (request.getParameter("type").equals("ajout"))
 				unJouet = new Jouet();
 			else { // on récupère le jouet courant
-
 				unJouet = GestionJouet.rechercher(id);
 			}
+			
 			unJouet.setNumero(request.getParameter("id"));
 			unJouet.setLibelle(request.getParameter("libelle"));
-			System.out.println("codecateg="
-					+ request.getParameter("codecateg"));
-			System.out.println("codetranche="
-					+ request.getParameter("codetranche"));
-			Categorie uneCateg = GestionCategorie.rechercher(request.getParameter("codecateg"));
+
+			Categorie uneCateg = GestionCategorie.rechercher(request.getParameter("categorie"));
 			unJouet.setCategorie(uneCateg);
 
-			Trancheage uneTranche = GestionTrancheAge.rechercher(request.getParameter("codetranche"));
+			Trancheage uneTranche = GestionTrancheAge.rechercher(request.getParameter("trancheage"));
 			unJouet.setTrancheage(uneTranche);
+			
+			//Quantite
+			String strQuantite = request.getParameter("quantite");
+			if (strQuantite != null)
+			{
+				int quantite = Integer.valueOf(strQuantite);
+				
+				Catalogue leCatalogue = GestionCatalogue.rechercher(request.getParameter("catalogue"));
+			
+			
+				//create "comporte" or modif if exists
+				ComporteId cid = new ComporteId(leCatalogue.getAnnee(), unJouet.getNumero());
+				Comporte c = new Comporte(cid, unJouet, leCatalogue);
+				c.setQuantite(quantite);
+				
+				Iterator<Comporte> it = unJouet.getComportes().iterator();
+				 while(it.hasNext())
+				 {
+					 Comporte cexit = it.next();
+					 if (cexit.equals(c))
+					 {
+						 quantite -= cexit.getQuantite();
+						 break;
+					 }
+				 }
+		
+				unJouet.addComporte(c);
+				 
+				//update catalogue
+				leCatalogue.setQuantiteDistribuee(leCatalogue.getQuantiteDistribuee()+quantite);
+				GestionCatalogue.modifier(leCatalogue);
+			}
 
 			// sauvegarde du jouet
 			if (request.getParameter("type").equals("modif")) {
 				GestionJouet.modifier(unJouet);
 			} else {
-
-				Catalogue leCatalogue = GestionCatalogue.rechercher(request
-								.getParameter("codecatalogue"));
-				System.out.println("Je suis à la quantité ");
-				;
-				int quantiteDistribution = Integer.parseInt(request
-						.getParameter("quantiteDistribution"));
-				if (quantiteDistribution > 0) {
-					leCatalogue
-							.setQuantiteDistribuee(leCatalogue
-									.getQuantiteDistribuee()
-									+ quantiteDistribution);
-					GestionCatalogue.modifier(leCatalogue);
-				}
 				GestionJouet.ajouter(unJouet);
 			}
+			
 			try {
 				request.setAttribute("mesJouets", GestionJouet.lister());
 				destinationPage = "/jouet/ListeJouets";
@@ -202,6 +215,22 @@ public class JouetController extends MultiActionController {
 			// effacement de la liste des id
 			try {
 				if (ids != null) {
+					//Enlever les quantités dans catalogues
+					for (String id : ids)
+					{
+						Jouet j = GestionJouet.rechercher(id);
+						Iterator<Comporte> it = j.getComportes().iterator();
+						
+						while(it.hasNext())
+						{
+							Comporte c = it.next();
+							
+							//update catalogue
+							Catalogue leCatalogue = GestionCatalogue.rechercher(String.valueOf(c.getId().getAnnee()));
+							leCatalogue.setQuantiteDistribuee(leCatalogue.getQuantiteDistribuee()-c.getQuantite());
+							GestionCatalogue.modifier(leCatalogue);
+						}
+					}
 					
 					GestionJouet.effacer(ids);
 					

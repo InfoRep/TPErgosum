@@ -51,7 +51,7 @@ public class GestionCategorie {
 		
 		//Requete SQL Categorie
 		String sql = "SELECT * FROM categorie WHERE codecateg ='"+parameter+"'";
-		System.out.println(sql);
+		//System.out.println(sql);
 		rs = DialogueBd.lecture(sql);
 		
 		

@@ -11,11 +11,13 @@ import java.util.Set;
  */
 public class Catalogue implements java.io.Serializable {
 
+	private static final long serialVersionUID = 1L;
 	private int annee;
 	private int quantiteDistribuee;
-	private Set comportes = new HashSet(0);
+	private Set<Comporte> comportes;
 
 	public Catalogue() {
+		comportes = new HashSet<Comporte>();
 	}
 
 	public Catalogue(int annee, int quantiteDistribuee) {
@@ -23,7 +25,7 @@ public class Catalogue implements java.io.Serializable {
 		this.quantiteDistribuee = quantiteDistribuee;
 	}
 
-	public Catalogue(int annee, int quantiteDistribuee, Set comportes) {
+	public Catalogue(int annee, int quantiteDistribuee, Set<Comporte> comportes) {
 		this.annee = annee;
 		this.quantiteDistribuee = quantiteDistribuee;
 		this.comportes = comportes;
@@ -45,11 +47,11 @@ public class Catalogue implements java.io.Serializable {
 		this.quantiteDistribuee = quantiteDistribuee;
 	}
 
-	public Set getComportes() {
+	public Set<Comporte> getComportes() {
 		return this.comportes;
 	}
 
-	public void setComportes(Set comportes) {
+	public void setComportes(Set<Comporte> comportes) {
 		this.comportes = comportes;
 	}
 	
