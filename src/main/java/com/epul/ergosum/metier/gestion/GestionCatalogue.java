@@ -34,7 +34,7 @@ public class GestionCatalogue {
 			c.setAnnee(Integer.valueOf(rs.get(index+0).toString()));
 			c.setQuantiteDistribuee(Integer.valueOf(rs.get(index+1).toString()));
 			
-			//TODO Gérer Comporte ??
+			//TODO ? comporte
 			
 			mesCatalogues.add(c);
 			
@@ -68,9 +68,7 @@ public class GestionCatalogue {
 				//TODO ? comporte
 				
 				return c;
-			} else {
-				throw new MonException("Aucun catalogue trouvé avec l'id : "+parameter);
-			}
+			} 
 		}
 		
 		return null;
@@ -95,9 +93,42 @@ public class GestionCatalogue {
 		}
 	}
 
-	public static List<CatalogueQuantites> listerCatalogueQuantites(int parseInt, int parseInt2) throws MonException {
-		// TODO Auto-generated method stub
-		return null;
+	public static List<CatalogueQuantites> listerCatalogueQuantites(int annee, int interval, String codecat) throws MonException {
+		List<CatalogueQuantites> list = new ArrayList<CatalogueQuantites>();
+		
+		int a = annee + interval;
+		
+		String sql = "SELECT c.annee, c.quantiteDistribuee, co.quantite, j.numero "
+				+ "FROM catalogue c, comporte co, jouet j "
+				+ "WHERE c.annee = co.annee and c.annee >= '"+annee+"' and c.annee <= '"+a+"' "
+						+ "and j.numero = co.numero ";
+		
+		if (codecat != null || (codecat != null && !codecat.trim().isEmpty()))
+		{
+			sql += "and j.codecateg ='"+codecat+"' ";
+		}
+		
+		sql += "ORDER BY c.annee asc";
+		
+		System.out.println(sql);
+		
+		List<Object> rs = DialogueBd.lecture(sql);
+		
+		int index = 0;
+		while(index < rs.size())
+		{
+			CatalogueQuantites cq = new CatalogueQuantites();
+			cq.setId(Integer.valueOf(rs.get(index+0).toString()));
+			cq.setQuantiteDistribuee(Integer.valueOf(rs.get(index+1).toString()));
+			cq.setQuantite(Integer.valueOf(rs.get(index+2).toString()));
+			cq.setNumeroJouet(Integer.valueOf(rs.get(index+3).toString()));
+			
+			list.add(cq);
+			
+			index = index + 4;
+		} 
+		
+		return list;
 	}
 
 	public static HashMap<Categorie, Integer> rechercherDictionnaire(String anneeCatalogue) throws MonException {

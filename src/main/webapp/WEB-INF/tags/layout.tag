@@ -95,8 +95,8 @@
 						<span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu" role="menu">
-						<li><a href="#">Par interval</a></li>
-						<li><a href="#">Par catégorie</a></li>
+						<li><a href="${pageContext.request.contextPath}/catalogue/selectionnerAnnee.htm">Par interval</a></li>
+						<li><a href="${pageContext.request.contextPath}/catalogue/selectionnerAnnee.htm?cat">Par catégorie</a></li>
 					</ul>
 				</li>
 				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>

@@ -19,9 +19,11 @@
    				<br/>
 		   		<p>Cette application vous permettra de modifier les jouets ainsi que leurs catalogues.</p>
 		   		<h5>En vous souhaitant une agréable visite !</h5>
+		   		
+		   		<img src="resources/images/jouet.png" width="300" alt="" />
 			</div>
 			<div class="col-md-4">
-	   			<img src="resources/images/polytech.png" width="200" alt="" />
+	   			<img src="resources/images/polytech.png" width="300" alt="" />
 			</div>
    		</div>
     </jsp:body>

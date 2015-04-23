@@ -1,8 +1,10 @@
 package com.epul.ergosum.controle;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,8 +20,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 import com.epul.ergosum.meserreurs.MonException;
+import com.epul.ergosum.metier.CatalogueQuantites;
 import com.epul.ergosum.metier.Categorie;
 import com.epul.ergosum.metier.gestion.GestionCatalogue;
+import com.epul.ergosum.metier.gestion.GestionCategorie;
 
 /**
  * Handles requests for the application home page.
@@ -46,54 +50,67 @@ public class MultiController extends MultiActionController {
 	}
 
 	/**
-	 * Sélection d'une année par catégorie
+	 * Sélection d'une année par catalogue et interval
 	 */
-	@RequestMapping(value = "selectionnerAnnee.htm")
+	@RequestMapping(value = "/catalogue/selectionnerAnnee.htm")
 	public ModelAndView selectionAnnee(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
 		String destinationPage = "";
-		destinationPage = "/selectionAnneeCat";
-		return new ModelAndView(destinationPage);
-	}
-
-	/**
-	 * Sélection d'une année Ctagoriet
-	 */
-	@RequestMapping(value = "listerCatalogue.htm")
-	public ModelAndView choixCatalogue(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-
-		String destinationPage = "/Erreur";
 		try {
 			request.setAttribute("catalogues", GestionCatalogue.lister());
-			destinationPage = "/ChoixCatalogue";
+			
+			//aff cat select
+			boolean cat = (request.getParameter("cat") != null);
+			request.setAttribute("cat", cat);
+			
+			if (cat)
+			{
+				request.setAttribute("categories", GestionCategorie.lister());
+			}
+			
+			destinationPage = "/catalogue/SelectionnerAnnee";
 		} catch (MonException e) {
 			request.setAttribute("MesErreurs", e.getMessage());
-		}
-
+		}	
+		
 		return new ModelAndView(destinationPage);
 	}
 
 	/**
 	 * afficher Catalogue
 	 */
-	@RequestMapping(value = "afficherCatalogues.htm")
+	@RequestMapping(value = "/catalogue/afficherCatalogues.htm")
 	public ModelAndView afficherCatalogue(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
 		String destinationPage = "/Erreur";
 		try {
-			String id = request.getParameter("id");
+			int annee = Integer.valueOf(request.getParameter("annee"));
+			int interval = Integer.valueOf(request.getParameter("interval"));
 			
-			// preparation de la liste
-			request.setAttribute("mesCataloguesQuantites", GestionCatalogue
-					.listerCatalogueQuantites(Integer.parseInt(request.getParameter("anneeDebut")),
-											  Integer.parseInt(request.getParameter("nbAnnees"))));
-			destinationPage = "/AfficherCatalogues";
+			List<CatalogueQuantites> list = null;
+			if (interval > 0)
+			{
+				request.setAttribute("annee", annee);
+				request.setAttribute("anneefin", annee+interval);
+				request.setAttribute("interval", interval);
+				
+				list = GestionCatalogue.listerCatalogueQuantites(annee, interval, request.getParameter("categorie"));
+				
+				if (request.getParameter("categorie") != null)
+				{
+					request.setAttribute("categorie", GestionCategorie.rechercher(request.getParameter("categorie")));
+				}
+				request.setAttribute("catQuantites", list);
+			} else {
+				list = new ArrayList<CatalogueQuantites>();
+				request.setAttribute("messErreur", "L'interval doit être positif !");
+			}
+						
+			destinationPage = "/catalogue/AfficherCataloguesInterval";
 		}
-
-		catch (MonException e) {
+		catch (Exception e) {
 			request.setAttribute("MesErreurs", e.getMessage());
 		}
 
