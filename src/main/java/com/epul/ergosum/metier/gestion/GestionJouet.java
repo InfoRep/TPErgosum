@@ -33,13 +33,10 @@ public class GestionJouet {
 		
 		//WHERE
 		if (categorieCode > 0)
-		{
-			sql += "CODECATEG = '"+categorieCode+"' "; //recherche par cat si code > 0
-			if (trancheCode > 0) 
-				sql += "AND "; //ajouter le AND si les 2 paramètres sont > 0
-		}
+			sql += "AND j.CODECATEG = '"+categorieCode+"' "; //recherche par cat si code > 0
+
 		if (trancheCode > 0)
-			sql += "CODETRANCHE='"+trancheCode+"' "; //ajouter tranche code
+			sql += "AND j.CODETRANCHE='"+trancheCode+"' "; //ajouter tranche code
 		
 		sql += "ORDER BY numero asc";
 		
@@ -179,8 +176,7 @@ public class GestionJouet {
 			}
 			
 			jouet.setComportes(sComporte);
-		} else 
-			throw new MonException("Aucun jouet trouvé avec l'id : "+numero);
+		} 
 		
         return jouet;
 	}

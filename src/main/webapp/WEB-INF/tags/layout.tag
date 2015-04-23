@@ -75,18 +75,17 @@
 						<li><a href="${pageContext.request.contextPath}/jouet/ajouterJouet.htm">Ajouter</a></li>
 						<li class="divider"></li>
 						<li>
-							<form method="post" role="search" action="#">
-					    		<input type="hidden" value="rechercheJouet" name="action"  />
+							<form method="post" role="search" action="${pageContext.request.contextPath}/jouet/afficherJouets.htm">
 						        <div class="form-group"  style="margin-bottom:2px;">
 						        	<div class="input-group">
 							        	<span class="input-group-addon" style="padding: 2px" id="basic-addon1">
 							        		<button style="padding:0;margin: 0" class="btn-link glyphicon glyphicon-search"></button>
 							        	</span>
-							         	<input type="text" class="form-control" placeholder="numero" name="champ" />
+							         	<input type="text" class="form-control" placeholder="numero" <c:if test="${not empty numeroSearch}">value="${numeroSearch}"</c:if> name="numero" />
 							         </div>
 						        </div>
 					     	</form>
-					     	<a href="#">Recherche avancée</a>
+					     	<a href="${pageContext.request.contextPath}/jouet/rechercheAvancee.htm">Recherche avancée</a>
 						</li>
 					</ul>
 				</li>

@@ -1,6 +1,8 @@
 package com.epul.ergosum.controle;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,22 +39,40 @@ public class JouetController extends MultiActionController {
 	
 		String destinationPage = "";
 		try {
-			int categorieCode;
-			int trancheCode;
-			String categorie = request.getParameter("codecateg");
-			String tranche = request.getParameter("codetranche");
-			if (categorie == null && tranche == null) {
-				categorieCode = 0;
-				trancheCode = 0;
-			} else {
-				categorieCode = Integer.parseInt(categorie);
-				trancheCode = Integer.parseInt(tranche);
-			}
+			List<Jouet> jouets = new ArrayList<Jouet>();
 
-			request.setAttribute("mesJouets", GestionJouet.lister(categorieCode, trancheCode));
+			String numero = request.getParameter("numero");
+			Jouet j = null;
+			if (numero != null && !numero.trim().isEmpty()) 
+			{
+				request.setAttribute("numeroSearch", numero);
+				j = GestionJouet.rechercher(numero);
+	
+				if (j == null)
+				{
+					request.setAttribute("messWarning", "Le jouet "+numero+" n'existe pas !");
+				} else {
+					jouets.add(j);
+				}
+			} else {
+				//Categorie tranche age
+				int categorieCode;
+				int trancheCode;
+				String categorie = request.getParameter("codecateg");
+				String tranche = request.getParameter("codetranche");
+				
+				if (categorie == null && tranche == null) {
+					categorieCode = 0;
+					trancheCode = 0;
+				} else {
+					categorieCode = Integer.parseInt(categorie);
+					trancheCode = Integer.parseInt(tranche);
+				}
+				
+				jouets = GestionJouet.lister(categorieCode, trancheCode);
+			}
 			
-			//request.setAttribute("categories", GestionCategorie.lister());
-			//request.setAttribute("tranches", GestionTrancheAge.lister());
+			request.setAttribute("mesJouets", jouets);
 		}
 
 		catch (MonException e) {
@@ -64,6 +84,27 @@ public class JouetController extends MultiActionController {
 		return new ModelAndView(destinationPage);
 	}
 
+	/**
+	 *  Recherche avancé
+	 */
+	@RequestMapping(value = "/jouet/rechercheAvancee.htm")
+	public ModelAndView rechercheAvancee(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		String destinationPage = "";
+		
+		try {
+			request.setAttribute("categories", GestionCategorie.lister());
+			request.setAttribute("tranches", GestionTrancheAge.lister());
+
+			destinationPage = "/jouet/RechercheAvancee";
+		} catch (MonException e) {
+			request.setAttribute("MesErreurs", e.getMessage());
+			destinationPage = "/Erreur";
+		}
+		
+		return new ModelAndView(destinationPage);
+	}
+	
 	/**
 	 * Ajout d'un jouet
 	 */
@@ -182,8 +223,10 @@ public class JouetController extends MultiActionController {
 			// sauvegarde du jouet
 			if (request.getParameter("type").equals("modif")) {
 				GestionJouet.modifier(unJouet);
+				request.setAttribute("messSuccess", "Le jouet "+unJouet.getNumero()+" a bien été modifié!");
 			} else {
 				GestionJouet.ajouter(unJouet);
+				request.setAttribute("messSuccess", "Le jouet "+unJouet.getNumero()+" a bien été ajouté!");
 			}
 			
 			try {

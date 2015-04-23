@@ -16,10 +16,16 @@
 		        <form method="post" action="effacerJouet.htm"> 
 			        <table class="table">
 				  		<tr>
-						 	<TH> Numero </TH>
+						 	<TH> 
+						 		Numero 
+					 		</TH>
 							<TH> Libelle </TH>
-						 	<TH> Tranche age </TH>
-						 	<TH> Catégorie </TH>
+						 	<TH> 
+						 		Tranche age
+					 		</TH>
+						 	<TH> 
+						 		Catégorie 
+					 		</TH>
 						 	<th></th>
 						 	<TH><button class="btn btn-danger"> Supprimer </button></TH>
 				 		</tr>
