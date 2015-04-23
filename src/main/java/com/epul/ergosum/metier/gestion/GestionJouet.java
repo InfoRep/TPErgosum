@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.epul.ergosum.meserreurs.MonException;
+import com.epul.ergosum.metier.Catalogue;
 import com.epul.ergosum.metier.Categorie;
 import com.epul.ergosum.metier.Comporte;
 import com.epul.ergosum.metier.ComporteId;
@@ -26,36 +27,27 @@ public class GestionJouet {
 		List<Object> rs;
 		List<Jouet> mesJouets = new ArrayList<Jouet>();
 		
-		//Categorie > 0 rechercher la categorie
-		Categorie cat = null;
-		if (categorieCode > 0)
-			cat = GestionCategorie.rechercher(String.valueOf(categorieCode));
-		
-		//Tranche age > 0 rechercher la tranche d'âge
-		Trancheage trancheage = null;
-		if (trancheCode > 0)
-			trancheage = GestionTrancheAge.rechercher(String.valueOf(trancheCode));
-
-		String sql = "SELECT * FROM jouet ";
+		String sql = "SELECT j.numero, j.codecateg, j.codetranche, j.libelle, t.agemin, t.agemax, c.libcateg "
+				+ "FROM jouet j, trancheage t, categorie c "
+				+ "WHERE j.codetranche = t.codetranche and j.codecateg = c.codecateg ";
 		
 		//WHERE
-		if (categorieCode > 0 || trancheCode > 0)
+		if (categorieCode > 0)
 		{
-			sql += "WHERE ";
-			if (categorieCode > 0)
-			{
-				sql += "CODECATEG = '"+categorieCode+"' "; //recherche par cat si code > 0
-				if (trancheCode > 0) 
-					sql += "AND "; //ajouter le AND si les 2 paramètres sont > 0
-			}
-			if (trancheCode > 0)
-				sql += "CODETRANCHE='"+trancheCode+"' "; //ajouter tranche code
+			sql += "CODECATEG = '"+categorieCode+"' "; //recherche par cat si code > 0
+			if (trancheCode > 0) 
+				sql += "AND "; //ajouter le AND si les 2 paramètres sont > 0
 		}
+		if (trancheCode > 0)
+			sql += "CODETRANCHE='"+trancheCode+"' "; //ajouter tranche code
 		
 		sql += "ORDER BY numero asc";
 		
-		System.out.println(sql); //TODO
+		System.out.println(sql); 
 
+		List<Categorie> categories = new ArrayList<Categorie>(); //pour mapping categorie
+		List<Trancheage> tranchesages = new ArrayList<Trancheage>();//pour mapping tranche age
+		
 		rs = DialogueBd.lecture(sql);
 		int index = 0;
 		while(index < rs.size())
@@ -65,21 +57,51 @@ public class GestionJouet {
 			j.setNumero(rs.get(index+0).toString());
 			j.setLibelle(rs.get(index+3).toString());
 
-			if (categorieCode > 0)
-				j.setCategorie(cat);
-			else {
-				j.setCategorie(GestionCategorie.rechercher(rs.get(index+1).toString())); //rechercher la categorie associé au jouet
-			}
+			//CATEGORIE
+			//Code categorie
+			String codeCateg = rs.get(index+1).toString();
+			Categorie cat = null;
+			for (Categorie c : categories)
+				if (c.getCodecateg().contentEquals(codeCateg))
+				{
+					cat = c;
+					break;
+				}
 			
-			if (trancheCode > 0)
-				j.setTrancheage(trancheage);
-			else {
-				j.setTrancheage(GestionTrancheAge.rechercher(rs.get(index+2).toString())); // rechercher la tranche age associer au jouet 
-			}
+			if (cat == null)
+			{
+				cat = new Categorie();
+				cat.setCodecateg(codeCateg);
+				cat.setLibcateg(rs.get(index+6).toString()); //libelle cat
+			}		
+			
+			j.setCategorie(cat);
+			cat.addJouet(j);
+			
+			//TRANCHE AGE
+			//Code trancheage
+			String codeTrancheAge = rs.get(index+2).toString();
+			Trancheage tra = null;
+			for (Trancheage t : tranchesages)
+				if (t.getCodetranche().contentEquals(codeTrancheAge))
+				{
+					tra = t;
+					break;
+				}
+			
+			if (tra == null)
+			{
+				tra = new Trancheage();
+				tra.setCodetranche(codeTrancheAge);
+				tra.setAgemin(Integer.valueOf(rs.get(index+4).toString()));
+				tra.setAgemax(Integer.valueOf(rs.get(index+5).toString()));
+			}		
+			
+			j.setTrancheage(tra);
+			tra.addJouet(j);
 			
 			mesJouets.add(j);
-			
-			index = index + 4; //4 champs
+			index = index + 7; 
 		}
 		
 		return mesJouets;
@@ -112,24 +134,48 @@ public class GestionJouet {
 			jouet.setLibelle(rs.get(3).toString());
 			
 			//LOAD COMPORTE
-			String req = "SELECT * FROM comporte WHERE numero = '"+numero+"'";
+			String req = "SELECT c.annee, c.numero, c.quantite, cat.quantiteDistribuee  "
+					+ "FROM comporte c, catalogue cat WHERE c.annee = cat.annee and c.numero = '"+numero+"'";
 			System.out.println(req);
 			List<Object> rsComporte = DialogueBd.lecture(req); 
-			Set<Comporte> sComporte = new HashSet<Comporte>();
+			Set<Comporte> sComporte = new HashSet<Comporte>(); //set to add to jouet
+			
+			List<Catalogue> catalogues = new ArrayList<Catalogue>(); //pour mapping
 			int index = 0;
 			while(index < rsComporte.size())
 			{
+				int annee = Integer.valueOf(rsComporte.get(index+0).toString());
+				
 				Comporte c = new Comporte();
-				ComporteId cid = new ComporteId(Integer.valueOf(rsComporte.get(index+0).toString()), numero);
+				ComporteId cid = new ComporteId(annee, numero);
 				
 				c.setId(cid);
-				c.setCatalogue(GestionCatalogue.rechercher(rsComporte.get(index+0).toString())); //rechercher l'object catalogue associé
+				
+				//CATALOGUE
+				Catalogue cat = null;
+				for (Catalogue cata : catalogues)
+					if (cata.getAnnee() == annee)
+					{
+						cat = cata;
+						break;
+					}
+				
+				if (cat == null)
+				{
+					cat = new Catalogue();
+					cat.setAnnee(annee);
+					cat.setQuantiteDistribuee(Integer.valueOf(rsComporte.get(index+3).toString()));
+				}		
+				
+				c.setCatalogue(cat);
+				cat.addComporte(c);
+				
 				c.setJouet(jouet);
 				c.setQuantite(Integer.valueOf(rsComporte.get(index+2).toString()));
 				
 				sComporte.add(c);
 				
-				index += 3;
+				index += 4;
 			}
 			
 			jouet.setComportes(sComporte);
@@ -160,12 +206,14 @@ public class GestionJouet {
 		//Update valeurs dans comportes : supprimer les lignes pour les remettres ensuites si valeur != 0
 		// (Possibilité d'ajouter une quantité à une autre année)
 		for (Comporte c : unJouet.getComportes())
-		{
-			try {
-				DialogueBd.insertionBD("INSERT INTO comporte VALUES ('"+c.getId().getAnnee()+"', '"+c.getId().getNumero()+"', '"+c.getQuantite()+"')");
-			} catch (Exception e) {
+		{			
+			List<Object> rsComporte = DialogueBd.lecture( "SELECT * FROM comporte WHERE annee='"+c.getId().getAnnee()+"' and numero = '"+c.getId().getNumero()+"'");
+			if (rsComporte.size() > 0)
+			{
 				DialogueBd.insertionBD("UPDATE comporte SET quantite = '"+c.getQuantite()+"' WHERE annee='"+c.getId().getAnnee()+"' and numero = '"+c.getId().getNumero()+"'");
-			}								
+			} else {
+				DialogueBd.insertionBD("INSERT INTO comporte VALUES ('"+c.getId().getAnnee()+"', '"+c.getId().getNumero()+"', '"+c.getQuantite()+"')");			
+			}
 		}
 	}
 

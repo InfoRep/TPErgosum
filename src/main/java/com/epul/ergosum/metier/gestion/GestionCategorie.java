@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.epul.ergosum.meserreurs.MonException;
-import com.epul.ergosum.metier.Catalogue;
 import com.epul.ergosum.metier.Categorie;
 import com.epul.ergosum.persistance.DialogueBd;
 

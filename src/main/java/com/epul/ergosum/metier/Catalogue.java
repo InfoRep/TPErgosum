@@ -51,6 +51,11 @@ public class Catalogue implements java.io.Serializable {
 		return this.comportes;
 	}
 
+	public void addComporte(Comporte c)
+	{
+		this.comportes.add(c);
+	}
+	
 	public void setComportes(Set<Comporte> comportes) {
 		this.comportes = comportes;
 	}

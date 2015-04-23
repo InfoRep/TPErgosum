@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.epul.ergosum.meserreurs.MonException;
-import com.epul.ergosum.metier.Categorie;
 import com.epul.ergosum.metier.Trancheage;
 import com.epul.ergosum.persistance.DialogueBd;
 
@@ -30,6 +29,8 @@ public class GestionTrancheAge {
 			ta.setCodetranche(rs.get(index+0).toString());
 			ta.setAgemin(Integer.valueOf(rs.get(index+1).toString()));
 			ta.setAgemax(Integer.valueOf(rs.get(index+2).toString()));
+			
+			//fill set of jouet here
 			
 			listTa.add(ta);
 			
@@ -61,6 +62,8 @@ public class GestionTrancheAge {
 			t.setCodetranche(rs.get(0).toString());
 			t.setAgemin(Integer.valueOf(rs.get(1).toString()));
 			t.setAgemax(Integer.valueOf(rs.get(2).toString()));
+			
+			//Fill set of jouet here
 		}
 		
 		return t;

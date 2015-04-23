@@ -47,6 +47,11 @@ public class Categorie implements java.io.Serializable {
 	public Set<Jouet> getJouets() {
 		return this.jouets;
 	}
+	
+	public void addJouet(Jouet j)
+	{
+		this.jouets.add(j);
+	}
 
 	public void setJouets(Set<Jouet> jouets) {
 		this.jouets = jouets;
