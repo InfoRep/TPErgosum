@@ -11,8 +11,6 @@ import com.epul.ergosum.meserreurs.MonException;
 
 
 public class DialogueBd {
-	
-	private static Connexion uneconnexion = null;
 	private static DialogueBd instance =null;
 
 	public static DialogueBd getInstance()

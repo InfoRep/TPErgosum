@@ -42,6 +42,7 @@ public class GestionJouet {
 		
 		System.out.println(sql); 
 
+		//CATEGORIES
 		List<Categorie> categories = new ArrayList<Categorie>(); //pour mapping categorie
 		List<Trancheage> tranchesages = new ArrayList<Trancheage>();//pour mapping tranche age
 		

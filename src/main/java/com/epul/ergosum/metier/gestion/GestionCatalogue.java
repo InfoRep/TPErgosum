@@ -34,7 +34,7 @@ public class GestionCatalogue {
 			c.setAnnee(Integer.valueOf(rs.get(index+0).toString()));
 			c.setQuantiteDistribuee(Integer.valueOf(rs.get(index+1).toString()));
 			
-			//TODO ? comporte
+			//TODO ? comporte (pas besoin pour ce site)
 			
 			mesCatalogues.add(c);
 			
@@ -65,7 +65,7 @@ public class GestionCatalogue {
 				c.setAnnee(Integer.valueOf(rs.get(0).toString()));
 				c.setQuantiteDistribuee(Integer.valueOf(rs.get(1).toString()));
 				
-				//TODO ? comporte
+				//TODO ? comporte (pas besoin pour ce site)
 				
 				return c;
 			} 
@@ -149,7 +149,7 @@ public class GestionCatalogue {
 			Categorie c = new Categorie();
 			c.setCodecateg(rs.get(index+0).toString());
 			c.setLibcateg(rs.get(index+1).toString());
-			//TODO setJouet ???
+			//TODO setJouet ? (pas besoin pour ce site)
 			
 	
 			hashCatInt.put(c, Integer.valueOf(rs.get(index+2).toString())); //Categorie, somme quantite

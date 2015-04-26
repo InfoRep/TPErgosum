@@ -50,7 +50,7 @@ public class MultiController extends MultiActionController {
 	}
 
 	/**
-	 * Sélection d'une année par catalogue et interval
+	 * Sélection d'une année par catalogue et interval (load view)
 	 */
 	@RequestMapping(value = "/catalogue/selectionnerAnnee.htm")
 	public ModelAndView selectionAnnee(HttpServletRequest request,
@@ -78,7 +78,7 @@ public class MultiController extends MultiActionController {
 	}
 
 	/**
-	 * afficher Catalogue
+	 * Afficher Catalogue
 	 */
 	@RequestMapping(value = "/catalogue/afficherCatalogues.htm")
 	public ModelAndView afficherCatalogue(HttpServletRequest request,
@@ -96,10 +96,11 @@ public class MultiController extends MultiActionController {
 				request.setAttribute("anneefin", annee+interval);
 				request.setAttribute("interval", interval);
 				
+				//liste des quantités
 				list = GestionCatalogue.listerCatalogueQuantites(annee, interval, request.getParameter("categorie"));
 				
 				if (request.getParameter("categorie") != null)
-				{
+				{ 
 					request.setAttribute("categorie", GestionCategorie.rechercher(request.getParameter("categorie")));
 				}
 				request.setAttribute("catQuantites", list);

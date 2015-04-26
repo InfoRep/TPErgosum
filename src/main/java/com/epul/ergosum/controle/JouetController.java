@@ -43,6 +43,8 @@ public class JouetController extends MultiActionController {
 
 			String numero = request.getParameter("numero");
 			Jouet j = null;
+			
+			//RECHERCHE
 			if (numero != null && !numero.trim().isEmpty()) 
 			{
 				request.setAttribute("numeroSearch", numero);
@@ -54,8 +56,9 @@ public class JouetController extends MultiActionController {
 				} else {
 					jouets.add(j);
 				}
-			} else {
-				//Categorie tranche age
+			}  
+			else {
+				//RECHERCHE par Categorie tranche age
 				int categorieCode;
 				int trancheCode;
 				String categorie = request.getParameter("codecateg");
@@ -64,7 +67,8 @@ public class JouetController extends MultiActionController {
 				if (categorie == null && tranche == null) {
 					categorieCode = 0;
 					trancheCode = 0;
-				} else {
+				} else 
+				{ //Afficher la liste complète
 					categorieCode = Integer.parseInt(categorie);
 					trancheCode = Integer.parseInt(tranche);
 				}
@@ -85,13 +89,14 @@ public class JouetController extends MultiActionController {
 	}
 
 	/**
-	 *  Recherche avancé
+	 *  Recherche avancé (load view)
 	 */
 	@RequestMapping(value = "/jouet/rechercheAvancee.htm")
 	public ModelAndView rechercheAvancee(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		String destinationPage = "";
 		
+		//Page avec selection d'une catégorie et/ou et une tranche d'âge
 		try {
 			request.setAttribute("categories", GestionCategorie.lister());
 			request.setAttribute("tranches", GestionTrancheAge.lister());
@@ -106,7 +111,7 @@ public class JouetController extends MultiActionController {
 	}
 	
 	/**
-	 * Ajout d'un jouet
+	 * Ajout d'un jouet (load view)
 	 */
 	@RequestMapping(value = "/jouet/ajouterJouet.htm")
 	public ModelAndView ajoutJouet(HttpServletRequest request,
@@ -134,7 +139,7 @@ public class JouetController extends MultiActionController {
 	}
 
 	/**
-	 * Modifier Jouet
+	 * Modifier Jouet (load view)
 	 */
 	@RequestMapping(value = "/jouet/modifierJouet.htm")
 	public ModelAndView modifierJouet(HttpServletRequest request,
@@ -174,8 +179,11 @@ public class JouetController extends MultiActionController {
 
 			Jouet unJouet = null;
 			if (request.getParameter("type").equals("ajout"))
+			{ //ajoute d'un jouet
 				unJouet = new Jouet();
-			else { // on récupère le jouet courant
+			}				
+			else 
+			{ // modification on récupère le jouet courant
 				unJouet = GestionJouet.rechercher(id);
 			}
 			
@@ -188,7 +196,7 @@ public class JouetController extends MultiActionController {
 			Trancheage uneTranche = GestionTrancheAge.rechercher(request.getParameter("trancheage"));
 			unJouet.setTrancheage(uneTranche);
 			
-			//Quantite
+			//Ajout ou modif QUANTITE
 			String strQuantite = request.getParameter("quantite");
 			if (strQuantite != null)
 			{
@@ -229,7 +237,8 @@ public class JouetController extends MultiActionController {
 				request.setAttribute("messSuccess", "Le jouet "+unJouet.getNumero()+" a bien été ajouté!");
 			}
 			
-			try {
+			try 
+			{ //Page afficher jouets
 				request.setAttribute("mesJouets", GestionJouet.lister());
 				destinationPage = "/jouet/ListeJouets";
 			} catch (MonException e) {

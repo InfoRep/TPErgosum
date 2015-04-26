@@ -30,7 +30,7 @@ public class GestionTrancheAge {
 			ta.setAgemin(Integer.valueOf(rs.get(index+1).toString()));
 			ta.setAgemax(Integer.valueOf(rs.get(index+2).toString()));
 			
-			//fill set of jouet here
+			//fill set of jouet here ... pas besoin pour ce site
 			
 			listTa.add(ta);
 			
@@ -63,7 +63,7 @@ public class GestionTrancheAge {
 			t.setAgemin(Integer.valueOf(rs.get(1).toString()));
 			t.setAgemax(Integer.valueOf(rs.get(2).toString()));
 			
-			//Fill set of jouet here
+			//Fill set of jouet here .. pas besoin pour ce site
 		}
 		
 		return t;
